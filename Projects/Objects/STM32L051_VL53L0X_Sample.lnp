@@ -1,0 +1,21 @@
+--cpu Cortex-M0+
+".\objects\main.o"
+".\objects\stm32l0xx_it.o"
+".\objects\system_stm32l0xx.o"
+".\objects\startup_stm32l053xx.o"
+".\objects\board_init.o"
+".\objects\board_gpio.o"
+".\objects\vl53l0x.o"
+".\objects\vl53l0x_cali.o"
+".\objects\vl53l0x_gen.o"
+".\objects\vl53l0x_api.o"
+".\objects\vl53l0x_api_calibration.o"
+".\objects\vl53l0x_api_core.o"
+".\objects\vl53l0x_api_ranging.o"
+".\objects\vl53l0x_api_strings.o"
+".\objects\vl53l0x_i2c.o"
+".\objects\vl53l0x_platform.o"
+--strict --scatter ".\Objects\STM32L051_VL53L0X_Sample.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Listings\STM32L051_VL53L0X_Sample.map" -o .\Objects\STM32L051_VL53L0X_Sample.axf
