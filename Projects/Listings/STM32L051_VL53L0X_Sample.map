@@ -1259,23 +1259,23 @@ Image Symbol Table
     i.RTC_AWU_Init                           0x08000558   Section        0  board_init.o(i.RTC_AWU_Init)
     RTC_AWU_Init                             0x08000559   Thumb Code   294  board_init.o(i.RTC_AWU_Init)
     i.RTC_IRQHandler                         0x0800069c   Section        0  board_init.o(i.RTC_IRQHandler)
-    i.SVC_Handler                            0x080006cc   Section        0  stm32l0xx_it.o(i.SVC_Handler)
-    i.SYSTICK_Init                           0x080006d0   Section        0  board_init.o(i.SYSTICK_Init)
-    SYSTICK_Init                             0x080006d1   Thumb Code    36  board_init.o(i.SYSTICK_Init)
-    i.SYS_GetTick                            0x080006fc   Section        0  board_init.o(i.SYS_GetTick)
-    i.SYS_IncTick                            0x08000708   Section        0  board_init.o(i.SYS_IncTick)
-    SYS_IncTick                              0x08000709   Thumb Code    12  board_init.o(i.SYS_IncTick)
-    i.SysTick_Handler                        0x08000718   Section        0  board_init.o(i.SysTick_Handler)
-    i.SystemClock_Init                       0x08000720   Section        0  system_stm32l0xx.o(i.SystemClock_Init)
-    i.SystemCoreClockUpdate                  0x08000890   Section        0  system_stm32l0xx.o(i.SystemCoreClockUpdate)
-    i.SystemInit                             0x080009a4   Section        0  system_stm32l0xx.o(i.SystemInit)
-    i.USART1_Init                            0x08000a18   Section        0  board_init.o(i.USART1_Init)
-    USART1_Init                              0x08000a19   Thumb Code   136  board_init.o(i.USART1_Init)
-    i.USART1_TX                              0x08000aa8   Section        0  board_init.o(i.USART1_TX)
-    i.__NVIC_SetPriority                     0x08000ae0   Section        0  board_init.o(i.__NVIC_SetPriority)
-    __NVIC_SetPriority                       0x08000ae1   Thumb Code   110  board_init.o(i.__NVIC_SetPriority)
-    i.main                                   0x08000b58   Section        0  main.o(i.main)
-    .constdata                               0x08000b94   Section       33  system_stm32l0xx.o(.constdata)
+    i.SVC_Handler                            0x080006dc   Section        0  stm32l0xx_it.o(i.SVC_Handler)
+    i.SYSTICK_Init                           0x080006e0   Section        0  board_init.o(i.SYSTICK_Init)
+    SYSTICK_Init                             0x080006e1   Thumb Code    36  board_init.o(i.SYSTICK_Init)
+    i.SYS_GetTick                            0x0800070c   Section        0  board_init.o(i.SYS_GetTick)
+    i.SYS_IncTick                            0x08000718   Section        0  board_init.o(i.SYS_IncTick)
+    SYS_IncTick                              0x08000719   Thumb Code    12  board_init.o(i.SYS_IncTick)
+    i.SysTick_Handler                        0x08000728   Section        0  board_init.o(i.SysTick_Handler)
+    i.SystemClock_Init                       0x08000730   Section        0  system_stm32l0xx.o(i.SystemClock_Init)
+    i.SystemCoreClockUpdate                  0x080008a0   Section        0  system_stm32l0xx.o(i.SystemCoreClockUpdate)
+    i.SystemInit                             0x080009b4   Section        0  system_stm32l0xx.o(i.SystemInit)
+    i.USART1_Init                            0x08000a28   Section        0  board_init.o(i.USART1_Init)
+    USART1_Init                              0x08000a29   Thumb Code   136  board_init.o(i.USART1_Init)
+    i.USART1_TX                              0x08000ab8   Section        0  board_init.o(i.USART1_TX)
+    i.__NVIC_SetPriority                     0x08000af0   Section        0  board_init.o(i.__NVIC_SetPriority)
+    __NVIC_SetPriority                       0x08000af1   Thumb Code   110  board_init.o(i.__NVIC_SetPriority)
+    i.main                                   0x08000b68   Section        0  main.o(i.main)
+    .constdata                               0x08000ba4   Section       33  system_stm32l0xx.o(.constdata)
     .data                                    0x20000000   Section        7  main.o(.data)
     .data                                    0x20000008   Section        4  system_stm32l0xx.o(.data)
     .data                                    0x2000000c   Section        5  board_init.o(.data)
@@ -1425,20 +1425,20 @@ Image Symbol Table
     HardFault_Handler                        0x08000551   Thumb Code     4  stm32l0xx_it.o(i.HardFault_Handler)
     NMI_Handler                              0x08000555   Thumb Code     2  stm32l0xx_it.o(i.NMI_Handler)
     PendSV_Handler                           0x08000557   Thumb Code     2  stm32l0xx_it.o(i.PendSV_Handler)
-    RTC_IRQHandler                           0x0800069d   Thumb Code    38  board_init.o(i.RTC_IRQHandler)
-    SVC_Handler                              0x080006cd   Thumb Code     2  stm32l0xx_it.o(i.SVC_Handler)
-    SYS_GetTick                              0x080006fd   Thumb Code     6  board_init.o(i.SYS_GetTick)
-    SysTick_Handler                          0x08000719   Thumb Code     8  board_init.o(i.SysTick_Handler)
-    SystemClock_Init                         0x08000721   Thumb Code   342  system_stm32l0xx.o(i.SystemClock_Init)
-    SystemCoreClockUpdate                    0x08000891   Thumb Code   248  system_stm32l0xx.o(i.SystemCoreClockUpdate)
-    SystemInit                               0x080009a5   Thumb Code    98  system_stm32l0xx.o(i.SystemInit)
-    USART1_TX                                0x08000aa9   Thumb Code    50  board_init.o(i.USART1_TX)
-    main                                     0x08000b59   Thumb Code    56  main.o(i.main)
-    AHBPrescTable                            0x08000b94   Data          16  system_stm32l0xx.o(.constdata)
-    APBPrescTable                            0x08000ba4   Data           8  system_stm32l0xx.o(.constdata)
-    PLLMulTable                              0x08000bac   Data           9  system_stm32l0xx.o(.constdata)
-    Region$$Table$$Base                      0x08000bb8   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x08000bd8   Number         0  anon$$obj.o(Region$$Table)
+    RTC_IRQHandler                           0x0800069d   Thumb Code    52  board_init.o(i.RTC_IRQHandler)
+    SVC_Handler                              0x080006dd   Thumb Code     2  stm32l0xx_it.o(i.SVC_Handler)
+    SYS_GetTick                              0x0800070d   Thumb Code     6  board_init.o(i.SYS_GetTick)
+    SysTick_Handler                          0x08000729   Thumb Code     8  board_init.o(i.SysTick_Handler)
+    SystemClock_Init                         0x08000731   Thumb Code   342  system_stm32l0xx.o(i.SystemClock_Init)
+    SystemCoreClockUpdate                    0x080008a1   Thumb Code   248  system_stm32l0xx.o(i.SystemCoreClockUpdate)
+    SystemInit                               0x080009b5   Thumb Code    98  system_stm32l0xx.o(i.SystemInit)
+    USART1_TX                                0x08000ab9   Thumb Code    50  board_init.o(i.USART1_TX)
+    main                                     0x08000b69   Thumb Code    56  main.o(i.main)
+    AHBPrescTable                            0x08000ba4   Data          16  system_stm32l0xx.o(.constdata)
+    APBPrescTable                            0x08000bb4   Data           8  system_stm32l0xx.o(.constdata)
+    PLLMulTable                              0x08000bbc   Data           9  system_stm32l0xx.o(.constdata)
+    Region$$Table$$Base                      0x08000bc8   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x08000be8   Number         0  anon$$obj.o(Region$$Table)
     TXBuff                                   0x20000000   Data           7  main.o(.data)
     SystemCoreClock                          0x20000008   Data           4  system_stm32l0xx.o(.data)
     awuFlag                                  0x20000010   Data           1  board_init.o(.data)
@@ -1465,9 +1465,9 @@ Memory Map of the image
 
   Image Entry point : 0x080000c1
 
-  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00000c4c, Max: 0x00010000, ABSOLUTE)
+  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00000c5c, Max: 0x00010000, ABSOLUTE)
 
-    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x00000bd8, Max: 0x00010000, ABSOLUTE)
+    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x00000be8, Max: 0x00010000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -1536,38 +1536,38 @@ Memory Map of the image
     0x08000554   0x08000554   0x00000002   Code   RO           62    i.NMI_Handler       stm32l0xx_it.o
     0x08000556   0x08000556   0x00000002   Code   RO           63    i.PendSV_Handler    stm32l0xx_it.o
     0x08000558   0x08000558   0x00000144   Code   RO          143    i.RTC_AWU_Init      board_init.o
-    0x0800069c   0x0800069c   0x00000030   Code   RO          144    i.RTC_IRQHandler    board_init.o
-    0x080006cc   0x080006cc   0x00000002   Code   RO           64    i.SVC_Handler       stm32l0xx_it.o
-    0x080006ce   0x080006ce   0x00000002   PAD
-    0x080006d0   0x080006d0   0x0000002c   Code   RO          145    i.SYSTICK_Init      board_init.o
-    0x080006fc   0x080006fc   0x0000000c   Code   RO          146    i.SYS_GetTick       board_init.o
-    0x08000708   0x08000708   0x00000010   Code   RO          147    i.SYS_IncTick       board_init.o
-    0x08000718   0x08000718   0x00000008   Code   RO          148    i.SysTick_Handler   board_init.o
-    0x08000720   0x08000720   0x00000170   Code   RO           96    i.SystemClock_Init  system_stm32l0xx.o
-    0x08000890   0x08000890   0x00000114   Code   RO           97    i.SystemCoreClockUpdate  system_stm32l0xx.o
-    0x080009a4   0x080009a4   0x00000074   Code   RO           98    i.SystemInit        system_stm32l0xx.o
-    0x08000a18   0x08000a18   0x00000090   Code   RO          149    i.USART1_Init       board_init.o
-    0x08000aa8   0x08000aa8   0x00000038   Code   RO          150    i.USART1_TX         board_init.o
-    0x08000ae0   0x08000ae0   0x00000078   Code   RO          151    i.__NVIC_SetPriority  board_init.o
-    0x08000b58   0x08000b58   0x0000003c   Code   RO            3    i.main              main.o
-    0x08000b94   0x08000b94   0x00000021   Data   RO           99    .constdata          system_stm32l0xx.o
-    0x08000bb5   0x08000bb5   0x00000003   PAD
-    0x08000bb8   0x08000bb8   0x00000020   Data   RO         2124    Region$$Table       anon$$obj.o
+    0x0800069c   0x0800069c   0x00000040   Code   RO          144    i.RTC_IRQHandler    board_init.o
+    0x080006dc   0x080006dc   0x00000002   Code   RO           64    i.SVC_Handler       stm32l0xx_it.o
+    0x080006de   0x080006de   0x00000002   PAD
+    0x080006e0   0x080006e0   0x0000002c   Code   RO          145    i.SYSTICK_Init      board_init.o
+    0x0800070c   0x0800070c   0x0000000c   Code   RO          146    i.SYS_GetTick       board_init.o
+    0x08000718   0x08000718   0x00000010   Code   RO          147    i.SYS_IncTick       board_init.o
+    0x08000728   0x08000728   0x00000008   Code   RO          148    i.SysTick_Handler   board_init.o
+    0x08000730   0x08000730   0x00000170   Code   RO           96    i.SystemClock_Init  system_stm32l0xx.o
+    0x080008a0   0x080008a0   0x00000114   Code   RO           97    i.SystemCoreClockUpdate  system_stm32l0xx.o
+    0x080009b4   0x080009b4   0x00000074   Code   RO           98    i.SystemInit        system_stm32l0xx.o
+    0x08000a28   0x08000a28   0x00000090   Code   RO          149    i.USART1_Init       board_init.o
+    0x08000ab8   0x08000ab8   0x00000038   Code   RO          150    i.USART1_TX         board_init.o
+    0x08000af0   0x08000af0   0x00000078   Code   RO          151    i.__NVIC_SetPriority  board_init.o
+    0x08000b68   0x08000b68   0x0000003c   Code   RO            3    i.main              main.o
+    0x08000ba4   0x08000ba4   0x00000021   Data   RO           99    .constdata          system_stm32l0xx.o
+    0x08000bc5   0x08000bc5   0x00000003   PAD
+    0x08000bc8   0x08000bc8   0x00000020   Data   RO         2124    Region$$Table       anon$$obj.o
 
 
-    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x08000bd8, Size: 0x00000708, Max: 0x00002000, ABSOLUTE)
+    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x08000be8, Size: 0x00000708, Max: 0x00002000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x20000000   0x08000bd8   0x00000007   Data   RW            4    .data               main.o
-    0x20000007   0x08000bdf   0x00000001   PAD
-    0x20000008   0x08000be0   0x00000004   Data   RW          100    .data               system_stm32l0xx.o
-    0x2000000c   0x08000be4   0x00000005   Data   RW          152    .data               board_init.o
-    0x20000011   0x08000be9   0x00000060   Data   RW          224    .data               board_gpio.o
-    0x20000071   0x08000c49   0x00000003   PAD
+    0x20000000   0x08000be8   0x00000007   Data   RW            4    .data               main.o
+    0x20000007   0x08000bef   0x00000001   PAD
+    0x20000008   0x08000bf0   0x00000004   Data   RW          100    .data               system_stm32l0xx.o
+    0x2000000c   0x08000bf4   0x00000005   Data   RW          152    .data               board_init.o
+    0x20000011   0x08000bf9   0x00000060   Data   RW          224    .data               board_gpio.o
+    0x20000071   0x08000c59   0x00000003   PAD
     0x20000074        -       0x00000030   Zero   RW          223    .bss                board_gpio.o
     0x200000a4        -       0x00000060   Zero   RW         1981    .bss                c_p.l(libspace.o)
-    0x20000104   0x08000c49   0x00000004   PAD
+    0x20000104   0x08000c59   0x00000004   PAD
     0x20000108        -       0x00000200   Zero   RW          134    HEAP                startup_stm32l053xx.o
     0x20000308        -       0x00000400   Zero   RW          133    STACK               startup_stm32l053xx.o
 
@@ -1580,14 +1580,14 @@ Image component sizes
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
        472         56          0         96         48       2726   board_gpio.o
-       792         82          0          5          0      14864   board_init.o
+       808         84          0          5          0      14868   board_init.o
         60          4          0          7          0     209704   main.o
         56         26        192          0       1536        600   startup_stm32l053xx.o
         10          0          0          0          0       1565   stm32l0xx_it.o
        760         72         33          4          0       2850   system_stm32l0xx.o
 
     ----------------------------------------------------------------------
-      2152        240        260        116       1584     232309   Object Totals
+      2168        242        260        116       1584     232313   Object Totals
          0          0         32          0          0          0   (incl. Generated)
          2          0          3          4          0          0   (incl. Padding)
 
@@ -1637,15 +1637,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-      2772        256        260        116       1684     232101   Grand Totals
-      2772        256        260        116       1684     232101   ELF Image Totals
-      2772        256        260        116          0          0   ROM Totals
+      2788        258        260        116       1684     232105   Grand Totals
+      2788        258        260        116       1684     232105   ELF Image Totals
+      2788        258        260        116          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                 3032 (   2.96kB)
+    Total RO  Size (Code + RO Data)                 3048 (   2.98kB)
     Total RW  Size (RW Data + ZI Data)              1800 (   1.76kB)
-    Total ROM Size (Code + RO Data + RW Data)       3148 (   3.07kB)
+    Total ROM Size (Code + RO Data + RW Data)       3164 (   3.09kB)
 
 ==============================================================================
 

@@ -37,8 +37,7 @@ int main(void)
 			TXBuff[5] = TXBuff[4] = Index;
 			Index ++;
 			USART1_TX((const char*)&TXBuff, sizeof(TXBuff));
-		}
-		
+		}		
 	}
 }
 

@@ -9,7 +9,7 @@
 #include "Board_Init.h"
 #include "Board_GPIO.h"
 
-#define  		RTC_INT_PRIORITY           	((uint32_t)4U)    					/*!< RTC interrupt priority */
+#define  		RTC_INT_PRIORITY           	((uint32_t)3U)    					/*!< RTC interrupt priority */
 #define  		TICK_INT_PRIORITY           ((uint32_t)3U)    					/*!< tick interrupt priority */
 #define  		USART1_INT_PRIORITY         ((uint32_t)2U)    					/*!< USART1 interrupt priority */
 #define  		SYSCLOCK_FRE				4194304
@@ -57,8 +57,10 @@ void RTC_IRQHandler(void)
 {
 	if(RTC->ISR & (0X1 << 10)) 
 	{
+		EXTI->PR |= (0X1 << 20);												// 不清楚的话会一直触发中断
 		RTC->ISR  &= ~(0X1 << 10);
 		awuFlag = 1- awuFlag;
+		
 	}
 }
 
@@ -182,7 +184,7 @@ static void RTC_AWU_Init(void)
 	while(!(RTC->ISR & 0X04)){};												// Waitting for access to config  Wakeup timer register
 	RTC->CR &= ~(0X7 << 0);														// RTCCLK(LSI 37Khz) / 16 as Auto Wakeup time clock
 	RTC->CR |=  (0X1 << 14);													// Eable Auto  Wakeup Timer interrupt
-	RTC->WUTR = 2312-1;															// 37000/16/2312 = 1S
+	RTC->WUTR = 4312-1;															// 37000/16/2312 = 1S
 	RTC->CR |=  (0X1 << 10);
 	NVIC_SetPriority(RTC_IRQn,	RTC_INT_PRIORITY);
 	NVIC_EnableIRQ(RTC_IRQn);
