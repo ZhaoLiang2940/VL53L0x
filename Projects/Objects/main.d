@@ -10,3 +10,4 @@
 .\objects\main.o: D:\MDK\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include\system_stm32l0xx.h
 .\objects\main.o: D:\MDK\Keil_529\ARM\ARMCC\Bin\..\include\stdbool.h
 .\objects\main.o: ..\Driver\Board_Init.h
+.\objects\main.o: ..\Driver\Board_GPIO.h

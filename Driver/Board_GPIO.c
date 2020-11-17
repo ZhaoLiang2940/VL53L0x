@@ -25,7 +25,7 @@ uint8_t			GPIOA_MODE_REG[] = 	{
 										INPUT_MODE,								/* GPIOA_PIN12 不用输入下拉 				*/
 										INPUT_MODE,								/* GPIOA_PIN13 不用输入下拉 				*/
 										INPUT_MODE,								/* GPIOA_PIN14 不用输入下拉 				*/
-										INPUT_MODE,								/* GPIOA_PIN15 VL53L0x中断，设置成中断形式 	*/
+										OUTPUT_MODE,								/* GPIOA_PIN15 VL53L0x中断，设置成中断形式 	*/
 									};
 
 uint8_t			GPIOB_MODE_REG[] = 	{
@@ -165,31 +165,31 @@ uint8_t			GPIOB_OD_REG[] = 	{
 
 /* GPIO OUT Put Data寄存器 */
 uint8_t			GPIOA_AF_REG[] = 	{
-										GPIO_AF(0),								/* GPIOA_PIN0  不用输入下拉 				*/
-										GPIO_AF(0),								/* GPIOA_PIN1  不用输入下拉 				*/
+										GPIO_AF(1),								/* GPIOA_PIN0  不用输入下拉 				*/
+										GPIO_AF(1),								/* GPIOA_PIN1  不用输入下拉 				*/
 										GPIO_AF(4),								/* GPIOA_PIN2  串口输出 					*/
 										GPIO_AF(4),								/* GPIOA_PIN3  串口输入 					*/
-										GPIO_AF(0),								/* GPIOA_PIN4  不用输入下拉 				*/
-										GPIO_AF(0),								/* GPIOA_PIN5  不用输入下拉 				*/
-										GPIO_AF(0),								/* GPIOA_PIN6  不用输入下拉 				*/
-										GPIO_AF(0),								/* GPIOA_PIN7  不用输入下拉 				*/
-										GPIO_AF(0),								/* GPIOA_PIN8  不用输入下拉 				*/
-										GPIO_AF(0),								/* GPIOA_PIN9  不用输入下拉 				*/
-										GPIO_AF(0),								/* GPIOA_PIN10 不用输入下拉 				*/
-										GPIO_AF(0),								/* GPIOA_PIN11 不用输入下拉 				*/
-										GPIO_AF(0),								/* GPIOA_PIN12 不用输入下拉 				*/
-										GPIO_AF(0),								/* GPIOA_PIN13 不用输入下拉 				*/
-										GPIO_AF(0),								/* GPIOA_PIN14 不用输入下拉 				*/
-										GPIO_AF(0),								/* GPIOA_PIN15 VL53L0x中断，设置成中断形式 	*/
+										GPIO_AF(1),								/* GPIOA_PIN4  不用输入下拉 				*/
+										GPIO_AF(1),								/* GPIOA_PIN5  不用输入下拉 				*/
+										GPIO_AF(1),								/* GPIOA_PIN6  不用输入下拉 				*/
+										GPIO_AF(1),								/* GPIOA_PIN7  不用输入下拉 				*/
+										GPIO_AF(1),								/* GPIOA_PIN8  不用输入下拉 				*/
+										GPIO_AF(1),								/* GPIOA_PIN9  不用输入下拉 				*/
+										GPIO_AF(1),								/* GPIOA_PIN10 不用输入下拉 				*/
+										GPIO_AF(1),								/* GPIOA_PIN11 不用输入下拉 				*/
+										GPIO_AF(1),								/* GPIOA_PIN12 不用输入下拉 				*/
+										GPIO_AF(1),								/* GPIOA_PIN13 不用输入下拉 				*/
+										GPIO_AF(1),								/* GPIOA_PIN14 不用输入下拉 				*/
+										GPIO_AF(1),								/* GPIOA_PIN15 VL53L0x中断，设置成中断形式 	*/
 									};
 
 uint8_t			GPIOB_AF_REG[] = 	{
-										GPIO_AF(0),								/* GPIOB_PIN0  CC640唤醒 					*/
-										GPIO_AF(0),								/* GPIOB_PIN1  CC2640发送数据 				*/
-										GPIO_AF(0),								/* GPIOB_PIN2  不用输入下拉					*/
-										GPIO_AF(0),								/* GPIOB_PIN3  按键输入，设置成中断形式 	*/
-										GPIO_AF(0),								/* GPIOB_PIN4  LED控制输出 					*/
-										GPIO_AF(0),								/* GPIOB_PIN5  VL53L0X睡眠控制 				*/
+										GPIO_AF(1),								/* GPIOB_PIN0  CC640唤醒 					*/
+										GPIO_AF(1),								/* GPIOB_PIN1  CC2640发送数据 				*/
+										GPIO_AF(1),								/* GPIOB_PIN2  不用输入下拉					*/
+										GPIO_AF(1),								/* GPIOB_PIN3  按键输入，设置成中断形式 	*/
+										GPIO_AF(1),								/* GPIOB_PIN4  LED控制输出 					*/
+										GPIO_AF(1),								/* GPIOB_PIN5  VL53L0X睡眠控制 				*/
 										GPIO_AF(1),								/* GPIOB_PIN6  I2C SCL 						*/
 										GPIO_AF(1),								/* GPIOB_PIN7  I2C SDA 						*/
 									};	
@@ -344,9 +344,9 @@ uint8_t GPIO_SET_BIT(GPIO_TypeDef *gpiox, uint8_t Bitx, bool Value)
 {
 	if((gpiox != GPIOA) && (gpiox != GPIOB)) return 2;
 	if(Value)
-		gpiox->ODR |= (0X1 << Value);
+		gpiox->BSRR |= (0X1 << Bitx);
 	else
-		gpiox->BSRR |= (0X1 << Value);
+		gpiox->BSRR |= (0X1 << (Bitx + 16));
 	return Value;
 }
 

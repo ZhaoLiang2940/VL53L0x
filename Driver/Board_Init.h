@@ -12,6 +12,7 @@
 
 extern		void 		Board_Init(void);
 extern		void 		USART1_TX(const char* buff, uint16_t size);
+extern		void 		USART2_TX(const char* buff, uint16_t size);
 extern		uint32_t 	SYS_GetTick(void);
 
 #endif

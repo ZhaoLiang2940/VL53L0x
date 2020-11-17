@@ -12,13 +12,19 @@
 #define  		RTC_INT_PRIORITY           	((uint32_t)3U)    					/*!< RTC interrupt priority */
 #define  		TICK_INT_PRIORITY           ((uint32_t)3U)    					/*!< tick interrupt priority */
 #define  		USART1_INT_PRIORITY         ((uint32_t)2U)    					/*!< USART1 interrupt priority */
+#define  		USART2_INT_PRIORITY         ((uint32_t)2U)    					/*!< USART1 interrupt priority */
 #define  		SYSCLOCK_FRE				4194304
 static void 	USART1_Init(void);
+static void 	USART2_Init(void);
 static void 	SYSTICK_Init(void);
 static void 	SYS_IncTick(void);
 static void 	RTC_AWU_Init(void);
 
-static __IO uint32_t uwTick;
+#ifndef LowPowerMode
+static __IO uint32_t uwSecond;
+#else
+static __IO uint32_t uwSecond;
+#endif
 bool	awuFlag = true;
 /********************************************************************************
 *               Board_Init.c
@@ -34,8 +40,8 @@ bool	awuFlag = true;
 ********************************************************************************/
 void Board_Init(void)
 {
-	GPIO_Init();
-	USART1_Init();
+//	GPIO_Init();
+	USART2_Init();
 	SYSTICK_Init();
 	RTC_AWU_Init();
 }
@@ -60,7 +66,6 @@ void RTC_IRQHandler(void)
 		EXTI->PR |= (0X1 << 20);												// 不清楚的话会一直触发中断
 		RTC->ISR  &= ~(0X1 << 10);
 		awuFlag = 1- awuFlag;
-		
 	}
 }
 
@@ -80,6 +85,27 @@ void RTC_IRQHandler(void)
 void SysTick_Handler(void)
 {
 	SYS_IncTick();
+}
+
+/********************************************************************************
+*               Board_Init.c
+*函数名称：	SysTick_Handler()
+*
+*函数作用：	Systick中断服务函数
+*
+*参数说明：	无
+*
+*函数返回：	无
+*
+*函数作者：	ZhaoSir
+********************************************************************************/
+void USART2_IRQHandler(void)
+{
+	uint8_t tmp = 0;
+	if(USART2->ISR & (0X1 << 5))
+	{
+		tmp = USART2->RDR;
+	}
 }
 
 /********************************************************************************
@@ -118,6 +144,43 @@ static void USART1_Init(void)
 	NVIC_SetPriority(USART1_IRQn,	USART1_INT_PRIORITY);
 }
 
+
+/********************************************************************************
+*               Board_Init.c
+*函数名称：	USART1_Init()
+*
+*函数作用：	串口1初始化，波特率115200
+*
+*参数说明：	无
+*
+*函数返回：	无
+*
+*函数作者：	ZhaoSir
+********************************************************************************/
+static void USART2_Init(void)
+{
+	uint32_t regTmp = 0;
+	uint32_t Baud = 0;
+	RCC->APB1ENR |= (0X1 << 17);
+	RCC->IOPENR  |= 0X01;
+	
+	GPIOA->MODER &= ~(0X0F <<  4);
+	GPIOA->MODER |=  (0X0A <<  4);
+	
+	GPIOA->AFR[0] &= ~(0XFF << 8);
+	GPIOA->AFR[0] |=  (0X44 << 8);
+	
+	regTmp |= (0X1 << 5);														/* RX interrput enable */
+	regTmp |= (0X1 << 3);														/* Transmitter is enable */
+	regTmp |= (0X1 << 2);														/* Receiver Enable */
+	USART2->CR1 = regTmp;
+	
+	Baud = SYSCLOCK_FRE / 9600;
+	USART2->BRR = Baud;
+	USART2->CR1 |= (0X1 << 0);													/* USRAT1 Enable */
+	NVIC_SetPriority(USART2_IRQn,	USART2_INT_PRIORITY);
+	NVIC_EnableIRQ(USART2_IRQn);
+}
 
 
 /********************************************************************************
@@ -162,6 +225,7 @@ static void RTC_AWU_Init(void)
 	uint16_t x = 0X7FF;
 	
 	PWR->CR |=  (0X1 << 8);														// Disable backup write protection
+	//PWR->CR |=  (0X1 << 0);
 	RCC->CSR |=  (0X1 << 0);													// Enable LSI clocks
 	while(x-- & (!(RCC->CSR & 0X2)));
 	RCC->CSR |=  (0X1 << 19);													// Reset RTC
@@ -174,6 +238,7 @@ static void RTC_AWU_Init(void)
 	RTC->WPR = 0XCA;
 	RTC->WPR = 0X53;
 	RCC->CSR &= ~(0X3 << 16);													// CLEAR_BIT
+	
 	RCC->CSR |=  (0X2 << 16);													// Config LSI oscillator clock used as RTC clock
 	
 	EXTI->IMR	|= (0X1 << 20);
@@ -215,6 +280,28 @@ void USART1_TX(const char* buff, uint16_t size)
 	while(!(USART1->ISR & (0X1 << 7))){};
 }
  
+/********************************************************************************
+*               Board_Init.c
+*函数名称：	USART1_TX()
+*
+*函数作用：	串口发送函数
+*
+*参数说明：	buff：发送内容的指针；
+*			size：发送内容的大小；
+*
+*函数返回：	无
+*
+*函数作者：	ZhaoSir
+********************************************************************************/
+void USART2_TX(const char* buff, uint16_t size)
+{
+	while(size--)
+	{
+		while(!(USART2->ISR & (0X1 << 7))){}
+			USART2->TDR = *buff++;
+	}
+	while(!(USART2->ISR & (0X1 << 7))){};
+}
 
 /********************************************************************************
 *               Board_Init.c
@@ -230,7 +317,11 @@ void USART1_TX(const char* buff, uint16_t size)
 ********************************************************************************/
 static void SYS_IncTick(void)
 {
+#ifndef LowPowerMode
 	uwTick++;
+#else
+	uwSecond++;
+#endif
 }
 
 /********************************************************************************
@@ -247,7 +338,11 @@ static void SYS_IncTick(void)
 ********************************************************************************/
 uint32_t SYS_GetTick(void)
 {
+#ifndef LowPowerMode
 	return uwTick;
+#else
+	return uwSecond++;
+#endif
 }
 
 

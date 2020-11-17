@@ -8,9 +8,10 @@
 #include "stm32l0xx.h"
 #include "stdbool.h"
 #include "Board_Init.h" 
-
+#include "Board_GPIO.h" 
 
 uint8_t TXBuff[7] = {0X5A, 0X00, 0X00, 0X00, 0XFE, 0XFE, 0XA5};
+bool 	bitVal = false;
 /********************************************************************************
 *               main.c
 *º¯ÊýÃû³Æ£º	main()
@@ -31,15 +32,20 @@ int main(void)
 	SysTickCount = SYS_GetTick();
 	while(1)
 	{		
-		if((SYS_GetTick() - SysTickCount) > 1000)
+		/*if((SYS_GetTick() - SysTickCount) > 3000)
 		{
 			SysTickCount = SYS_GetTick();
 			TXBuff[5] = TXBuff[4] = Index;
 			Index ++;
-			USART1_TX((const char*)&TXBuff, sizeof(TXBuff));
-		}		
+			USART2_TX((const char*)&TXBuff, sizeof(TXBuff));
+			bitVal = 1 - bitVal;
+			GPIO_SET_BIT(GPIOB, 0, bitVal);
+		}	*/
+		//__WFI;
 	}
 }
+
+
 
 
 
