@@ -23,3 +23,6 @@
 .\objects\vl53l0x.o: ..\VL53L0x\App\vl53l0x.h
 .\objects\vl53l0x.o: ..\VL53L0x\App\vl53l0x_gen.h
 .\objects\vl53l0x.o: ..\VL53L0x\App\vl53l0x_cali.h
+.\objects\vl53l0x.o: ..\Driver\Board_GPIO.h
+.\objects\vl53l0x.o: D:\MDK\Keil_529\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\vl53l0x.o: ..\Driver\Board_Init.h

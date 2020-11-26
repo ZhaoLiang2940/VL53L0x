@@ -9,9 +9,26 @@
 #include "stdbool.h"
 #include "Board_Init.h" 
 #include "Board_GPIO.h" 
+#include "VL53L0x.h"
+
+#define			SamplePeriod   2
 
 uint8_t TXBuff[7] = {0X5A, 0X00, 0X00, 0X00, 0XFE, 0XFE, 0XA5};
 bool 	bitVal = false;
+uint32_t testTimes = 2;
+int fuck = 10;
+
+void delay(us)
+{
+	for(int i = 0; i < us; us--)
+	{
+		__NOP();
+	}
+}
+
+uint16_t Distance_data = 0;
+VL53L0X_Dev_t vl53l0x_dev;														// 设备I2C数据参数
+VL53L0X_RangingMeasurementData_t VL53L0x_Data;
 /********************************************************************************
 *               main.c
 *函数名称：	main()
@@ -26,22 +43,32 @@ bool 	bitVal = false;
 ********************************************************************************/
 int main(void)
 {
-	uint8_t Index = 0;
 	uint32_t SysTickCount = 0UL;
 	Board_Init();
-	SysTickCount = SYS_GetTick();
+	VL53L0X_Init(&vl53l0x_dev);
+	GPIO_SET_BIT(GPIOA, 15, 0);
+	Systick_DelayMs(5000); 
+	GPIO_SET_BIT(GPIOA, 15, 1);
 	while(1)
 	{		
-		/*if((SYS_GetTick() - SysTickCount) > 3000)
+		if((SYS_GetTick() - SysTickCount) == SamplePeriod)
 		{
+			GPIO_SET_BIT(GPIOA, 15, 1);
+			readVL5Ll0x_PollingtMode(&vl53l0x_dev, &VL53L0x_Data, 0, &Distance_data);
+		}
+		else if((SYS_GetTick() - SysTickCount) > SamplePeriod)
+		{
+			GPIO_SET_BIT(GPIOA, 15, 0);
 			SysTickCount = SYS_GetTick();
-			TXBuff[5] = TXBuff[4] = Index;
-			Index ++;
+			TXBuff[3] = (Distance_data >> 8) & 0XFF;
+			TXBuff[4] = (Distance_data >> 0) & 0XFF;
+			TXBuff[5] = TXBuff[4] + TXBuff[3];
 			USART2_TX((const char*)&TXBuff, sizeof(TXBuff));
 			bitVal = 1 - bitVal;
-			GPIO_SET_BIT(GPIOB, 0, bitVal);
-		}	*/
-		//__WFI;
+			GPIO_SET_BIT(GPIOA, 15, 1);
+		}
+		else
+			__WFI;
 	}
 }
 

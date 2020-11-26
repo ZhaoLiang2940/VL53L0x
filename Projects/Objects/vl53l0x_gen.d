@@ -24,3 +24,4 @@
 .\objects\vl53l0x_gen.o: ..\VL53L0x\App\vl53l0x.h
 .\objects\vl53l0x_gen.o: ..\VL53L0x\App\vl53l0x_gen.h
 .\objects\vl53l0x_gen.o: ..\VL53L0x\App\vl53l0x_cali.h
+.\objects\vl53l0x_gen.o: ..\Driver\Board_Init.h

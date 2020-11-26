@@ -6,10 +6,10 @@
  *  Author: ZhaoSir
  *******************************************************************************/
 #include "VL53L0x.h"
+#include "Board_GPIO.h" 
+#include "Board_Init.h" 
 
 
-
-VL53L0X_Dev_t vl53l0x_dev;														// 设备I2C数据参数
 VL53L0X_DeviceInfo_t vl53l0x_dev_info;											// 设备ID版本信息
 uint8_t AjustOK = 0;															// 校准标志位
 
@@ -109,10 +109,9 @@ VL53L0X_Error VL53L0X_SetAddress(VL53L0X_Dev_t *dev, uint8_t newaddr)
 	set_error:
 	if(Status != VL53L0X_ERROR_NONE)
 	{
-
+		Status = 1;
 	}
-	if(sta!=0)
-	  printf("sta:0x%x\r\n",sta);
+
 	return Status;
 }
 
@@ -154,27 +153,44 @@ void VL53L0x_RESET(VL53L0X_Dev_t *dev)
 *	
 *函数作者：	ZhaoSir
 ********************************************************************************/
-static VL53L0X_Error VL53L0X_Init(VL53L0X_Dev_t *dev)
+VL53L0X_Error VL53L0X_Init(VL53L0X_Dev_t *dev)
 {
+	/*
+	 *	XSHUT 	----->  PB4
+	 *	INT		----->  PB5
+	 *	I2C_SCL	----->  PB6
+	 *	I2C_SDA	----->  PB7
+	 */
 	VL53L0X_Error Status        = VL53L0X_ERROR_NONE;
 	VL53L0X_Dev_t *pMyDevice    = dev;
 
+	RCC->IOPENR |= 0X02;
+	GPIOB->MODER   &= ~(0X3 <<  8);
+	GPIOB->MODER   |=  (0X1 <<  8);
+	
+	GPIOB->OTYPER  &= ~(0X1 <<  4);
+	GPIOB->PUPDR   &= ~(0X3 <<  8);
+	GPIOB->PUPDR   |=  (0X1 <<  8);
+	GPIOB->OSPEEDR &= ~(0X3 <<  8);
+	GPIOB->OSPEEDR |=  (0X1 <<  8);	
+	
 	pMyDevice->I2cDevAddr = VL53L0X_Addr;                                   // I2C地址(上电默认0x52)
 	pMyDevice->comms_type = 1;                                              // I2C通信模式
 	pMyDevice->comms_speed_khz = 400;                                       // I2C通信速率
 	
 	/*  初始化IIC和相关的引脚  */
-	
+	VL53L0X_i2c_init();
 	VL53L0X_Xshut(0);                                                       // 失能VL53L0X
 	DelayMS(30);
 	VL53L0X_Xshut(1);                                                       // 使能VL53L0X,让传感器处于工作
 	DelayMS(30);
 	
-	VL53L0X_SetAddress(pMyDevice, 0x54);                                    // 设置VL53L0X传感器I2C地址
+	Status = VL53L0X_SetAddress(pMyDevice, 0x54);                           // 设置VL53L0X传感器I2C地址
     if(Status != VL53L0X_ERROR_NONE)    goto error;
 	Status = VL53L0X_DataInit(pMyDevice);                                   //设备初始化
 	if(Status != VL53L0X_ERROR_NONE)    goto error;
 	DelayMS(2);
+
 	Status = VL53L0X_GetDeviceInfo(pMyDevice, &vl53l0x_dev_info);           // 获取设备ID信息
     if(Status!=VL53L0X_ERROR_NONE) goto error;
 /********************************************************************/
@@ -195,32 +211,6 @@ static VL53L0X_Error VL53L0X_Init(VL53L0X_Dev_t *dev)
 }
 
 
-VL53L0X_Dev_t vl53l0x_dev;
-/********************************************************************************
-*               vl53l0x.c
-*函数名称：	readVL53L0X()
-*	
-*函数作用：	读取VL53L0X的数据
-*	
-*参数说明：	无
-*	
-*函数返回：	无
-*	
-*函数作者：	ZhaoSir
-********************************************************************************/
-uint8_t VL53L0X_Read(uint8_t mode)
-{   
-	 uint8_t    i=0;
 
-	 for(i = 0; i < 5; i++)
-	 {
-	     if(!VL53L0X_Init(&vl53l0x_dev))    break;
-	 }
-	 if(i >= 5) return 1;
-
-	 readVL5Ll0x_PollingtMode(&vl53l0x_dev, mode);
-
-	 return 0;
-}
 
 

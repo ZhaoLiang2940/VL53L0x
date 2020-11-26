@@ -1,4 +1,4 @@
-.\objects\system_stm32l0xx.o: ..\Sys\system_stm32l0xx.c
+.\objects\system_stm32l0xx.o: RTE\Device\STM32L051K8Ux\system_stm32l0xx.c
 .\objects\system_stm32l0xx.o: D:\MDK\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l0xx.h
 .\objects\system_stm32l0xx.o: D:\MDK\Arm\Packs\Keil\STM32L0xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include\stm32l051xx.h
 .\objects\system_stm32l0xx.o: D:\MDK\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include\core_cm0plus.h

@@ -3,14 +3,13 @@
 #include "stdint.h"
 #include "stm32l0xx.h"
 
-#define			VL_READ_SDA				((GPIOB->IDR & (0X1 << 7)) ? 1 : 0)
-#define			VL_SDA_IN()				(GPIOB->MODER &= ~(0X3 << 12))
-#define			VL_SDA_OUT() 			(GPIOB->MODER |=  (0X1 << 12))
-#define			VL_IIC_SDA_H			(GPIOB->ODR |=  (0X1 << 7))
-#define			VL_IIC_SDA_L			(GPIOB->ODR &= ~(0X1 << 7))
-#define			VL_IIC_SCL_H			(GPIOB->ODR |=  (0X1 << 6))
-#define			VL_IIC_SCL_L			(GPIOB->ODR &= ~(0X1 << 6))
-#define 		VL53L0x_DelayUS(x)
+#define			VL_READ_SDA				(((GPIOB->IDR) & 0X80) ? 1 : 0)
+#define			VL_SDA_IN()				(GPIOB->MODER &= ~(0X3 << 14))
+#define			VL_SDA_OUT() 			(GPIOB->MODER |=  (0X1 << 14))
+#define			VL_IIC_SDA_H			GPIOB->BSRR |= (0X1 <<  7)
+#define			VL_IIC_SDA_L			GPIOB->BSRR |= (0X1 << 23)
+#define			VL_IIC_SCL_H			GPIOB->BSRR |= (0X1 <<  6)
+#define			VL_IIC_SCL_L			GPIOB->BSRR |= (0X1 <<  22)
 
 
 //״̬

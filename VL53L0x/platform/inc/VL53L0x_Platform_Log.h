@@ -108,7 +108,7 @@
 //    #define _LOG_FUNCTION_START(module, fmt, ... ) (void)0
 //    #define _LOG_FUNCTION_END(module, status, ... ) (void)0
 //    #define _LOG_FUNCTION_END_FMT(module, status, fmt, ... ) (void)0
-//    #define trace_vprintf(...) (void)0
+//    #define trace_v//printf(...) (void)0
 //    #define VL53L0X_trace_config(...) (void)0
 
 //#endif /* else */

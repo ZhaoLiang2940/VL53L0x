@@ -207,13 +207,7 @@ uint8_t			GPIOB_AF_REG[] = 	{
 ********************************************************************************/
 void GPIO_Init(void)
 {
-	RCC->IOPENR |= 0X03;
-	GPIOA->MODER &= ~(0X3 << 30);
-	GPIOA->MODER |=  (0X1 << 30);
-	GPIOA->ODR |= (0X1 << 15);
-	
-#if 0	
- 	uint32_t regVal = 0;
+	uint32_t regVal = 0;
 	RCC->IOPENR |= 0X03;														/* Enable PORTA, PORTB Clock */
 	
 	regVal = 0X28000000;
@@ -329,7 +323,6 @@ void GPIO_Init(void)
 	GPIOB->AFR[0] = regVal;
 	regVal = 0;
 	/*¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡üGPIOB¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü¡ü*/	
-#endif
 }
 
 

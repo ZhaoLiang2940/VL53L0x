@@ -1,8 +1,6 @@
 #include "vl53l0x_gen.h"
+#include "Board_Init.h" 
 
-
-VL53L0X_RangingMeasurementData_t vl53l0x_data;//测距测量结构体
-volatile uint16_t Distance_data=0;//保存测距数据
 
 
 /********************************************************************************
@@ -101,7 +99,7 @@ VL53L0X_Error VL53L0x_SetMode(VL53L0X_Dev_t *dev,uint8_t mode)
 *
 *函数作者：ZhaoSir
 ********************************************************************************/
-VL53L0X_Error VL53L0x_StartOneTimesSample(VL53L0X_Dev_t *dev, VL53L0X_RangingMeasurementData_t *pdata, char *buf)
+VL53L0X_Error VL53L0x_StartOneTimesSample(VL53L0X_Dev_t *dev, VL53L0X_RangingMeasurementData_t *pdata, char *buf, uint16_t* Distance_data)
 {
 	VL53L0X_Error status = VL53L0X_ERROR_NONE;
 	uint8_t RangeStatus;
@@ -113,7 +111,7 @@ VL53L0X_Error VL53L0x_StartOneTimesSample(VL53L0X_Dev_t *dev, VL53L0X_RangingMea
     memset(buf, 0x00, VL53L0X_MAX_STRING_LENGTH);
 	VL53L0X_GetRangeStatusString(RangeStatus, buf);                             // 根据测量状态读取状态字符串
 	
-	Distance_data = pdata->RangeMilliMeter;                                     // 保存最近一次测距测量数据
+	*Distance_data = pdata->RangeMilliMeter;                                     // 保存最近一次测距测量数据
 
     return status;
 }
@@ -133,24 +131,33 @@ VL53L0X_Error VL53L0x_StartOneTimesSample(VL53L0X_Dev_t *dev, VL53L0X_RangingMea
 *
 *函数作者：ZhaoSir
 ********************************************************************************/
-void readVL5Ll0x_PollingtMode(VL53L0X_Dev_t *dev, uint8_t mode)
+uint8_t readVL5Ll0x_PollingtMode(VL53L0X_Dev_t *dev,VL53L0X_RangingMeasurementData_t* vl53l0x_data, uint8_t mode, uint16_t* Distance_data)
 {
     static char buf[VL53L0X_MAX_STRING_LENGTH];                                 // 测试模式字符串字符缓冲区
 	VL53L0X_Error Status = VL53L0X_ERROR_NONE;                                  // 工作状态
 	uint8_t i=0;
-	
+	uint16_t disDataBuff[5] = {0};
+	uint16_t* disDataPoint = disDataBuff;
 	while(VL53L0x_SetMode(dev, mode))                                          // 配置测量模式
 	{
 	    DelayMS(500);
-		i++;  if(i == 2)  return;
+		i++;  if(i == 5)  return 1;
 	}
-
+	i=0;
 	while(1)
 	{
         if(Status == VL53L0X_ERROR_NONE)
         {
-            Status = VL53L0x_StartOneTimesSample(dev, &vl53l0x_data, buf);    // 执行一次测量
+            Status = VL53L0x_StartOneTimesSample(dev, vl53l0x_data, buf, disDataPoint++);    // 执行一次测量
+			i++;  
+			if(i == 5)  
+			{
+				*Distance_data = (disDataBuff[0] + disDataBuff[1] + disDataBuff[2] + disDataBuff[3] + disDataBuff[4]) / 5;
+				return 0;	
+			}
         }
+		else
+			return 2;
 	}	
 }
 

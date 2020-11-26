@@ -13,19 +13,89 @@
 #define  		TICK_INT_PRIORITY           ((uint32_t)3U)    					/*!< tick interrupt priority */
 #define  		USART1_INT_PRIORITY         ((uint32_t)2U)    					/*!< USART1 interrupt priority */
 #define  		USART2_INT_PRIORITY         ((uint32_t)2U)    					/*!< USART1 interrupt priority */
-#define  		SYSCLOCK_FRE				4194304
+#define  		SYSCLOCK_FRE				32000000
 static void 	USART1_Init(void);
 static void 	USART2_Init(void);
 static void 	SYSTICK_Init(void);
 static void 	SYS_IncTick(void);
 static void 	RTC_AWU_Init(void);
 
+
+volatile float 	systick_usFac = 0;
 #ifndef LowPowerMode
-static __IO uint32_t uwSecond;
+static __IO uint32_t uwTick;
 #else
 static __IO uint32_t uwSecond;
 #endif
 bool	awuFlag = true;
+
+/********************************************************************************
+*               Board_Init.c
+*函数名称：	SystemClock_Init()
+*
+*函数作用：	设置系统时钟；使用MSI作为HCLK和PCLK，使用4.194Mhz
+*			LSE驱动RTC唤醒系统；
+*
+*参数说明：	无
+*
+*函数返回：	无
+*
+*函数作者：	ZhaoSir
+********************************************************************************/
+uint16_t SystemClock_Init(void)
+{
+	uint32_t regTmp = 	0;
+	
+	/* PREREAD_ENABLE */
+	FLASH->ACR |= FLASH_ACR_PRE_READ;
+	
+	/* PREFETCH_ENABLE */
+	FLASH->ACR |= FLASH_ACR_PRFTEN;
+	FLASH->ACR |= FLASH_ACR_LATENCY;
+	/* Enable Power Control clock */
+	RCC->APB1ENR |= RCC_APB1ENR_PWREN;
+	
+	RCC->CR &=  ~(0X1 << 24);
+	/* Set voltage scaling1 */
+	regTmp = PWR->CR;
+	regTmp &= ~(0X03 << 11);
+	regTmp |=  (0X01 << 11);
+	PWR->CR = regTmp;
+	
+	regTmp = RCC->CFGR;
+	regTmp &= ~(0X3 << 22);
+	regTmp &= ~(0XF << 18);
+	regTmp &= ~(0X7 << 11);
+	regTmp &= ~(0X7 <<  8);
+	regTmp &= ~(0XF <<  4);
+	
+	regTmp |=  (0X1 << 22);											// PLLout = PLLVCO / 2;  PLLVCO = 16/ 4 * 16 = 64Mhz;  PLL = 32Mhz
+	regTmp |=  (0X5 << 18);											// PLLVCO = (HSI_16 / 4) * 16 = 64Mhz
+	RCC->CFGR = regTmp;
+	
+	/* Enable HSI Clock, and wait ready */
+	RCC->CR |= 0X08;
+	RCC->CR |= 0X01;		
+	uint16_t wx = 0XFFFF;
+	/* 等待HSI稳定 */
+	while((!(RCC->CR & (0X04))) && (wx--));							// Waitting HSI Ready
+	if(wx == 0) return 1;
+	
+	RCC->CR |=  (0X1 << 24);												// Enable PLL
+	wx = 0XFFFF;
+	/* 等待PLL稳定*/
+	while((!(RCC->CR & (0X1 << 25))) && (wx--));							// Waitting HSI Ready
+	if(wx == 0) return 1;
+	
+	/* switch PLL to sysclock*/
+	RCC->CFGR |= 0X3;
+	wx = 0XFFFF;
+	/* 等待PLL成为系统时钟 */
+	while((!((RCC->CFGR & 0X0C) == 0X0C)) && (wx--));							// Waitting HSI Ready
+	if(wx == 0) return 1;
+	
+	return 0;
+}
 /********************************************************************************
 *               Board_Init.c
 *函数名称：	Board_Init()
@@ -40,7 +110,8 @@ bool	awuFlag = true;
 ********************************************************************************/
 void Board_Init(void)
 {
-//	GPIO_Init();
+	SystemClock_Init();
+	GPIO_Init();
 	USART2_Init();
 	SYSTICK_Init();
 	RTC_AWU_Init();
@@ -65,7 +136,7 @@ void RTC_IRQHandler(void)
 	{
 		EXTI->PR |= (0X1 << 20);												// 不清楚的话会一直触发中断
 		RTC->ISR  &= ~(0X1 << 10);
-		awuFlag = 1- awuFlag;
+		SYS_IncTick();
 	}
 }
 
@@ -126,6 +197,8 @@ static void USART1_Init(void)
 	uint32_t Baud = 0;
 	RCC->APB2ENR |= (0X1 << 14);
 	RCC->IOPENR  |= 0X01;
+	RCC->CCIPR &= ~0X3;
+	RCC->CCIPR |=  0X1;
 	
 	GPIOA->MODER &= ~(0X0F << 18);
 	GPIOA->MODER |=  (0X0A << 18);
@@ -197,15 +270,62 @@ static void USART2_Init(void)
 ********************************************************************************/
 static void SYSTICK_Init(void)
 {
-	SysTick->LOAD = ((SYSCLOCK_FRE / 1000) - 1);
-	NVIC_SetPriority (SysTick_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL); 			/* set Priority for Systick Interrupt */
+	systick_usFac  = SYSCLOCK_FRE / 1000000.0;
 	SysTick->VAL = 0UL;
-	SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk |
-					SysTick_CTRL_TICKINT_Msk   |
-					SysTick_CTRL_ENABLE_Msk;
-	
-	NVIC_SetPriority(SysTick_IRQn,	TICK_INT_PRIORITY);
+	SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk ;
 }
+
+/********************************************************************************
+*               Board_Init.c
+*函数名称：	Systick_DelayUs()
+*
+*函数作用：	利用Systick来进行us延时
+*
+*参数说明：	us：延时时长
+*
+*函数返回：	无
+*
+*函数作者：	ZhaoSir
+********************************************************************************/
+void Systick_DelayUs(uint16_t us)
+{
+	uint32_t systickVal = 0;
+	uint32_t	tmp = 0;
+	systickVal = systick_usFac * us;
+	SysTick->VAL = 0;
+	SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk ;
+	SysTick->LOAD = systickVal;
+	SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;
+	
+	do{
+		tmp = SysTick->CTRL;
+	}while((tmp&0x01) && (!(tmp&(1<<16))));
+	SysTick->LOAD = 0;
+	SysTick->CTRL &= ~(0X1) ;
+}
+
+
+/********************************************************************************
+*               Board_Init.c
+*函数名称：	Systick_DelayUs()
+*
+*函数作用：	利用Systick来进行us延时
+*
+*参数说明：	us：延时时长
+*
+*函数返回：	无
+*
+*函数作者：	ZhaoSir
+********************************************************************************/
+void Systick_DelayMs(uint16_t us)
+{
+	while(us)
+	{
+		us --;
+		Systick_DelayUs(1000);
+	}
+}
+
 
 /********************************************************************************
 *               Board_Init.c
@@ -225,13 +345,16 @@ static void RTC_AWU_Init(void)
 	uint16_t x = 0X7FF;
 	
 	PWR->CR |=  (0X1 << 8);														// Disable backup write protection
-	//PWR->CR |=  (0X1 << 0);
-	RCC->CSR |=  (0X1 << 0);													// Enable LSI clocks
-	while(x-- & (!(RCC->CSR & 0X2)));
+	PWR->CR |=  (0X1 << 0);
 	RCC->CSR |=  (0X1 << 19);													// Reset RTC
+	
 	x = 0X7FF;
 	while(x--);
 	RCC->CSR &= ~(0X1 << 19);													// Finish Reset RTC
+	
+	x = 0X7FF;
+	RCC->CSR |=  (0X1 << 8);													// Enable LSI clocks
+	while(x-- & (!(RCC->CSR & 0X200)));
 	
 	RCC->CSR |=  (0X1 << 18);													// Enable RTC Clock
 	
@@ -239,7 +362,7 @@ static void RTC_AWU_Init(void)
 	RTC->WPR = 0X53;
 	RCC->CSR &= ~(0X3 << 16);													// CLEAR_BIT
 	
-	RCC->CSR |=  (0X2 << 16);													// Config LSI oscillator clock used as RTC clock
+	RCC->CSR |=  (0X1 << 16);													// Config LSI oscillator clock used as RTC clock
 	
 	EXTI->IMR	|= (0X1 << 20);
 	EXTI->RTSR  |= (0X1 << 20);
@@ -249,7 +372,7 @@ static void RTC_AWU_Init(void)
 	while(!(RTC->ISR & 0X04)){};												// Waitting for access to config  Wakeup timer register
 	RTC->CR &= ~(0X7 << 0);														// RTCCLK(LSI 37Khz) / 16 as Auto Wakeup time clock
 	RTC->CR |=  (0X1 << 14);													// Eable Auto  Wakeup Timer interrupt
-	RTC->WUTR = 4312-1;															// 37000/16/2312 = 1S
+	RTC->WUTR = 0X800 - 1;														// 37000/16/2312 = 1S
 	RTC->CR |=  (0X1 << 10);
 	NVIC_SetPriority(RTC_IRQn,	RTC_INT_PRIORITY);
 	NVIC_EnableIRQ(RTC_IRQn);
@@ -341,7 +464,7 @@ uint32_t SYS_GetTick(void)
 #ifndef LowPowerMode
 	return uwTick;
 #else
-	return uwSecond++;
+	return  uwSecond;
 #endif
 }
 

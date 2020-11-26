@@ -49,7 +49,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Objects\</OutputDirectory>
-          <OutputName>STM32L051_VL53L0X_Sample</OutputName>
+          <OutputName>STM32L051_VL53L0X_Sample_V2</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
@@ -110,11 +110,11 @@
         </CommonProperty>
         <DllOption>
           <SimDllName>SARMCM3.DLL</SimDllName>
-          <SimDllArguments> -REMAP</SimDllArguments>
+          <SimDllArguments> -REMAP-MPU </SimDllArguments>
           <SimDlgDll>DARMCM1.DLL</SimDlgDll>
           <SimDlgDllArguments>-pCM0+</SimDlgDllArguments>
           <TargetDllName>SARMCM3.DLL</TargetDllName>
-          <TargetDllArguments></TargetDllArguments>
+          <TargetDllArguments>-MPU </TargetDllArguments>
           <TargetDlgDll>TARMCM1.DLL</TargetDlgDll>
           <TargetDlgDllArguments>-pCM0+</TargetDlgDllArguments>
         </DllOption>
@@ -134,11 +134,11 @@
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
-            <DriverSelection>4096</DriverSelection>
+            <DriverSelection>-1</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>STM32L051xx,LowPowerMode</Define>
               <Undefine></Undefine>
-              <IncludePath>..\HAL\Inc;..\HAL\Inc\Legacy;..\Sys;..\VL53L0x\App;..\VL53L0x\core\inc;..\VL53L0x\platform\inc;..\Driver</IncludePath>
+              <IncludePath>..\App;..\Driver;..\HALx\Inc;..\HALx\Inc\Legacy;..\Sys;..\VL53L0x\App;..\VL53L0x\core\inc;..\VL53L0x\platform\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -397,30 +397,20 @@
               <FileType>1</FileType>
               <FilePath>..\Sys\stm32l0xx_it.c</FilePath>
             </File>
-            <File>
-              <FileName>system_stm32l0xx.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Sys\system_stm32l0xx.c</FilePath>
-            </File>
-            <File>
-              <FileName>startup_stm32l053xx.s</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\Sys\startup_stm32l053xx.s</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Driver</GroupName>
           <Files>
             <File>
-              <FileName>Board_Init.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Driver\Board_Init.c</FilePath>
-            </File>
-            <File>
               <FileName>Board_GPIO.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Driver\Board_GPIO.c</FilePath>
+            </File>
+            <File>
+              <FileName>Board_Init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Driver\Board_Init.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -492,6 +482,9 @@
         <Group>
           <GroupName>::CMSIS</GroupName>
         </Group>
+        <Group>
+          <GroupName>::Device</GroupName>
+        </Group>
       </Groups>
     </Target>
   </Targets>
@@ -502,12 +495,34 @@
       <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="5.3.0" condition="ARMv6_7_8-M Device">
         <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.6.0"/>
         <targetInfos>
-          <targetInfo name="VL53L0x_API"/>
+          <targetInfo name="VL53L0x_Sample"/>
+        </targetInfos>
+      </component>
+      <component Cbundle="Standalone" Cclass="Device" Cgroup="Startup" Cvendor="Keil" Cversion="1.0.0" condition="STM32L0 CMSIS">
+        <package name="STM32L0xx_DFP" schemaVersion="1.6.3" url="http://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
+        <targetInfos>
           <targetInfo name="VL53L0x_Sample"/>
         </targetInfos>
       </component>
     </components>
-    <files/>
+    <files>
+      <file attr="config" category="source" condition="STM32L051 ARMCC" name="Drivers\CMSIS\Device\ST\STM32L0xx\Source\Templates\arm\startup_stm32l051xx.s" version="2.3.3">
+        <instance index="0">RTE\Device\STM32L051K8Ux\startup_stm32l051xx.s</instance>
+        <component Cbundle="Standalone" Cclass="Device" Cgroup="Startup" Cvendor="Keil" Cversion="1.0.0" condition="STM32L0 CMSIS"/>
+        <package name="STM32L0xx_DFP" schemaVersion="1.6.3" url="http://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
+        <targetInfos>
+          <targetInfo name="VL53L0x_Sample"/>
+        </targetInfos>
+      </file>
+      <file attr="config" category="source" name="Drivers\CMSIS\Device\ST\STM32L0xx\Source\Templates\system_stm32l0xx.c" version="2.3.3">
+        <instance index="0">RTE\Device\STM32L051K8Ux\system_stm32l0xx.c</instance>
+        <component Cbundle="Standalone" Cclass="Device" Cgroup="Startup" Cvendor="Keil" Cversion="1.0.0" condition="STM32L0 CMSIS"/>
+        <package name="STM32L0xx_DFP" schemaVersion="1.6.3" url="http://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
+        <targetInfos>
+          <targetInfo name="VL53L0x_Sample"/>
+        </targetInfos>
+      </file>
+    </files>
   </RTE>
 
 </Project>

@@ -1,11 +1,32 @@
 #include "VL53L0x_I2c.h"
+#include "Board_GPIO.h" 
+#include "Board_Init.h"
 
 
 //VL53L0X I2C初始化
 void VL53L0X_i2c_init(void)
 {
+	
+	GPIOB->MODER &= ~(0XF << 12);
+	GPIOB->MODER |=  (0X5 << 12);
+	
+	GPIOB->OTYPER  &= ~(0X3 << 6);
+	//GPIOB->OTYPER  |=  (0X3 << 6);
+	
+	GPIOB->PUPDR   &= ~(0XF << 12);
+	GPIOB->PUPDR   |=  (0X5 << 12);
+	GPIOB->OSPEEDR &= ~(0XF << 12);
+	GPIOB->OSPEEDR |=  (0XF << 12);	
+	
+	GPIOB->ODR |=  (0X3 << 6);
+}
 
-
+void I2C_Delay(us)
+{
+	for(int i = 0; i < us; us--)
+	{
+		__NOP();
+	}
 }
 
 /********************************************************************************
@@ -25,11 +46,14 @@ void VL_IIC_Start(void)
 	VL_SDA_OUT();																// sda线输出
 	VL_IIC_SDA_H;	  	  
 	VL_IIC_SCL_H;
-	VL53L0x_DelayUS(4);
+	I2C_Delay(12);
  	VL_IIC_SDA_L;																// START:when CLK is high,DATA change form high to low 
-	VL53L0x_DelayUS(4);
+	I2C_Delay(12);
 	VL_IIC_SCL_L;																// 钳住I2C总线，准备发送或接收数据 
 }
+
+
+
 
 /********************************************************************************
 *               VL53L0x_I2c.c
@@ -48,10 +72,10 @@ void VL_IIC_Stop(void)
 	VL_SDA_OUT();																// sda线输出
 	VL_IIC_SCL_L;
 	VL_IIC_SDA_L;																// STOP:when CLK is high DATA change form low to high
- 	VL53L0x_DelayUS(4);
+ 	I2C_Delay(12);
 	VL_IIC_SCL_H; 
 	VL_IIC_SDA_H;																// 发送I2C总线结束信号
-	VL53L0x_DelayUS(4);							   	
+	I2C_Delay(12);						   	
 }
 
 
@@ -70,14 +94,16 @@ void VL_IIC_Stop(void)
 ********************************************************************************/
 uint8_t VL_IIC_Wait_Ack(void)
 {
-	uint8_t ucErrTime = 0;
-	VL_SDA_IN();  																// SDA设置为输入  
-	VL_IIC_SDA_H; VL53L0x_DelayUS(1);	   
-	VL_IIC_SCL_H; VL53L0x_DelayUS(1);	 
+	uint16_t ucErrTime = 0;
+	VL_SDA_IN();  						// SDA设置为输入  
+	
+	VL_IIC_SDA_H;I2C_Delay(2);	
+	VL_IIC_SCL_H;I2C_Delay(2);
+	
 	while(VL_READ_SDA)
 	{
 		ucErrTime++;
-		if(ucErrTime > 250)
+		if(ucErrTime > 2500)
 		{
 			VL_IIC_Stop();
 			return 1;
@@ -104,9 +130,9 @@ void VL_IIC_Ack(void)
 	VL_IIC_SCL_L;
 	VL_SDA_OUT();
 	VL_IIC_SDA_L;
-	VL53L0x_DelayUS(2);
+	I2C_Delay(10);
 	VL_IIC_SCL_H;
-	VL53L0x_DelayUS(2);
+	I2C_Delay(10);
 	VL_IIC_SCL_L;
 }
 
@@ -127,9 +153,9 @@ void VL_IIC_NAck(void)
 	VL_IIC_SCL_L;
 	VL_SDA_OUT();
 	VL_IIC_SDA_H;
-	VL53L0x_DelayUS(2);
+	I2C_Delay(10);
 	VL_IIC_SCL_H;
-	VL53L0x_DelayUS(2);
+	I2C_Delay(10);
 	VL_IIC_SCL_L;
 }
 
@@ -158,11 +184,11 @@ void VL_IIC_Send_Byte(uint8_t txd)
 		else
 			VL_IIC_SDA_L;
 		txd<<=1; 	  
-		VL53L0x_DelayUS(2);  
+		I2C_Delay(10); 
 		VL_IIC_SCL_H;
-		VL53L0x_DelayUS(2); 
+		I2C_Delay(10);
 		VL_IIC_SCL_L;	
-		VL53L0x_DelayUS(2);
+		I2C_Delay(10);
     }	 
 } 
 
@@ -185,11 +211,11 @@ uint8_t VL_IIC_Read_Byte(unsigned char ack)
 	for(i = 0; i < 8; i++)
 	{
 		VL_IIC_SCL_L; 
-		VL53L0x_DelayUS(4);
+		I2C_Delay(10);
 		VL_IIC_SCL_H;
 		receive <<= 1;
 		if(VL_READ_SDA)	receive++;   
-		VL53L0x_DelayUS(4); 													// 1
+		I2C_Delay(10);												// 1
 	}					 
 	if (!ack)
 		VL_IIC_NAck();															// 发送nACK
@@ -248,6 +274,7 @@ uint8_t VL_IIC_Read_1Byte(uint8_t SlaveAddress, uint8_t REG_Address,uint8_t *REG
 {
 	VL_IIC_Start();
 	VL_IIC_Send_Byte(SlaveAddress);												// 发写命令
+	__nop();__nop();__nop();__nop();
 	if(VL_IIC_Wait_Ack())
 	{
 		 VL_IIC_Stop();															// 释放总线

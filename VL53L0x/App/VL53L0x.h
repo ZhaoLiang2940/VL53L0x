@@ -11,8 +11,8 @@
 #define VL53L0X_Addr 0x52
 
 
-#define		VL53L0X_Xshut(x) 
-#define		DelayMS(x) 
+#define		VL53L0X_Xshut(x) 	GPIO_SET_BIT(GPIOB, 4, x)
+#define		DelayMS(x) 			Systick_DelayMs(x)
 
 //使能2.8V IO电平模式
 #define USE_I2C_2V8  1
@@ -38,9 +38,9 @@ typedef  struct
 extern mode_data Mode_data[];
 extern uint8_t  AjustOK;
 
-void            VL53L0x_RESET(VL53L0X_Dev_t *dev);//vl53l0x复位
-uint8_t         VL53L0X_Read(uint8_t mode);//获取一次测量距离数据
-
+extern	void            VL53L0x_RESET(VL53L0X_Dev_t *dev);//vl53l0x复位
+extern	uint8_t         VL53L0X_Read(uint8_t mode);//获取一次测量距离数据
+extern	VL53L0X_Error 	VL53L0X_Init(VL53L0X_Dev_t *dev);
 
 #endif
 

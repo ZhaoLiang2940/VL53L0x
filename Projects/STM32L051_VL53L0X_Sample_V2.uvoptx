@@ -119,23 +119,8 @@
       <TargetDriverDllRegistry>
         <SetRegEntry>
           <Number>0</Number>
-          <Key>ST-LINKIII-KEIL_SWO</Key>
-          <Name>-U48FF71064983535605342087 -O206 -SF10000 -C0 -A0 -I0 -HNlocalhost -HP7184 -P1 -N00("ARM CoreSight SW-DP (ARM Core") -D00(0BC11477) -L00(0) -TO131090 -TC10000000 -TT10000000 -TP21 -TDS8000 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO15 -FD20000000 -FC1000 -FN1 -FF0STM32L0xx_64.FLM -FS08000000 -FL010000 -FP0($$Device:STM32L051K8Ux$CMSIS\Flash\STM32L0xx_64.FLM)</Name>
-        </SetRegEntry>
-        <SetRegEntry>
-          <Number>0</Number>
-          <Key>DLGTARM</Key>
-          <Name>(1010=892,589,1303,1091,0)(1007=105,137,312,358,0)(1008=1326,415,1702,651,0)(1009=-1,-1,-1,-1,0)</Name>
-        </SetRegEntry>
-        <SetRegEntry>
-          <Number>0</Number>
-          <Key>DLGUARM</Key>
-          <Name>(105=-1,-1,-1,-1,0)</Name>
-        </SetRegEntry>
-        <SetRegEntry>
-          <Number>0</Number>
           <Key>JL2CM3</Key>
-          <Name>-U59400616 -O2126 -S12 -ZTIFSpeedSel5 -A0 -C0 -JU1 -JI127.0.0.1 -JP0 -RST1 -TO18 -TC10000000 -TP21 -TDS8001 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -TB1 -TFE0 -FO15 -FD20000000 -FC1000 -FN1 -FF0STM32L0xx_64.FLM -FS08000000 -FL010000 -FP0($$Device:STM32L051K8Ux$CMSIS\Flash\STM32L0xx_64.FLM)</Name>
+          <Name>-U59400616 -O78 -S1 -ZTIFSpeedSel10000 -A0 -C0 -JU1 -JI127.0.0.1 -JP0 -RST0 -N00("ARM CoreSight SW-DP") -D00(0BC11477) -L00(0) -TO18 -TC10000000 -TP21 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -TB1 -TFE0 -FO15 -FD20000000 -FC1000 -FN1 -FF0STM32L0xx_64.FLM -FS08000000 -FL010000 -FP0($$Device:STM32L051K8Ux$CMSIS\Flash\STM32L0xx_64.FLM)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -144,13 +129,23 @@
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
-          <Key>DLGDARM</Key>
-          <Name>(1010=-1,-1,-1,-1,0)(1007=-1,-1,-1,-1,0)(1008=-1,-1,-1,-1,0)(1009=-1,-1,-1,-1,0)</Name>
+          <Key>DLGTARM</Key>
+          <Name>(1010=-1,-1,-1,-1,0)(1007=-1,-1,-1,-1,0)(1008=1022,318,1398,554,0)(1012=-1,-1,-1,-1,0)(1009=-1,-1,-1,-1,0)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
           <Key>ARMDBGFLAGS</Key>
-          <Name>-T0</Name>
+          <Name></Name>
+        </SetRegEntry>
+        <SetRegEntry>
+          <Number>0</Number>
+          <Key>DLGUARM</Key>
+          <Name>(105=-1,-1,-1,-1,0)</Name>
+        </SetRegEntry>
+        <SetRegEntry>
+          <Number>0</Number>
+          <Key>ST-LINKIII-KEIL_SWO</Key>
+          <Name>-U48FF71064983535605342087 -O206 -SF10000 -C0 -A0 -I0 -HNlocalhost -HP7184 -P1 -N00("ARM CoreSight SW-DP (ARM Core") -D00(0BC11477) -L00(0) -TO131090 -TC10000000 -TT10000000 -TP21 -TDS8000 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO15 -FD20000000 -FC1000 -FN1 -FF0STM32L0xx_64.FLM -FS08000000 -FL010000 -FP0($$Device:STM32L051K8Ux$CMSIS\Flash\STM32L0xx_64.FLM)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -162,77 +157,25 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>31</LineNumber>
+          <LineNumber>158</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134220164</Address>
+          <Address>134219646</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\App\Main.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\STM32L051_VL53L0X_Sample\../App/Main.c\31</Expression>
-        </Bp>
-        <Bp>
-          <Number>1</Number>
-          <Type>0</Type>
-          <LineNumber>44</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>..\App\Main.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression></Expression>
-        </Bp>
-        <Bp>
-          <Number>2</Number>
-          <Type>0</Type>
-          <LineNumber>101</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
           <Filename>..\Driver\Board_Init.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression></Expression>
+          <Expression>\\STM32L051_VL53L0X_Sample_V2\../Driver/Board_Init.c\158</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>uwTick</ItemText>
-        </Ww>
-        <Ww>
-          <count>1</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>awuFlag</ItemText>
-        </Ww>
-        <Ww>
-          <count>2</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>SysTickCount</ItemText>
-        </Ww>
-        <Ww>
-          <count>3</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>SYSCLOCK_FRE,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>4</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>bitVal</ItemText>
+          <ItemText>Distance_data,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>
@@ -241,7 +184,7 @@
       <DebugFlag>
         <trace>0</trace>
         <periodic>1</periodic>
-        <aLwin>1</aLwin>
+        <aLwin>0</aLwin>
         <aCover>0</aCover>
         <aSer1>0</aSer1>
         <aSer2>0</aSer2>
@@ -279,20 +222,12 @@
       <pMultCmdsp></pMultCmdsp>
       <SystemViewers>
         <Entry>
-          <Name>System Viewer\EXTI</Name>
-          <WinId>35899</WinId>
-        </Entry>
-        <Entry>
-          <Name>System Viewer\GPIOA</Name>
-          <WinId>35903</WinId>
-        </Entry>
-        <Entry>
           <Name>System Viewer\GPIOB</Name>
           <WinId>35902</WinId>
         </Entry>
         <Entry>
           <Name>System Viewer\PWR</Name>
-          <WinId>35900</WinId>
+          <WinId>35904</WinId>
         </Entry>
         <Entry>
           <Name>System Viewer\RCC</Name>
@@ -300,15 +235,15 @@
         </Entry>
         <Entry>
           <Name>System Viewer\RTC</Name>
-          <WinId>35901</WinId>
+          <WinId>35903</WinId>
         </Entry>
         <Entry>
           <Name>System Viewer\USART1</Name>
-          <WinId>35904</WinId>
+          <WinId>35901</WinId>
         </Entry>
         <Entry>
           <Name>System Viewer\USART2</Name>
-          <WinId>35898</WinId>
+          <WinId>35900</WinId>
         </Entry>
       </SystemViewers>
       <DebugDescription>
@@ -359,30 +294,6 @@
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
-    <File>
-      <GroupNumber>2</GroupNumber>
-      <FileNumber>3</FileNumber>
-      <FileType>1</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\Sys\system_stm32l0xx.c</PathWithFileName>
-      <FilenameWithoutPath>system_stm32l0xx.c</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>2</GroupNumber>
-      <FileNumber>4</FileNumber>
-      <FileType>2</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\Sys\startup_stm32l053xx.s</PathWithFileName>
-      <FilenameWithoutPath>startup_stm32l053xx.s</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
   </Group>
 
   <Group>
@@ -393,25 +304,25 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>3</GroupNumber>
-      <FileNumber>5</FileNumber>
-      <FileType>1</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\Driver\Board_Init.c</PathWithFileName>
-      <FilenameWithoutPath>Board_Init.c</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>3</GroupNumber>
-      <FileNumber>6</FileNumber>
+      <FileNumber>3</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\Driver\Board_GPIO.c</PathWithFileName>
       <FilenameWithoutPath>Board_GPIO.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>4</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\Driver\Board_Init.c</PathWithFileName>
+      <FilenameWithoutPath>Board_Init.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -425,7 +336,7 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>4</GroupNumber>
-      <FileNumber>7</FileNumber>
+      <FileNumber>5</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -437,7 +348,7 @@
     </File>
     <File>
       <GroupNumber>4</GroupNumber>
-      <FileNumber>8</FileNumber>
+      <FileNumber>6</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -449,7 +360,7 @@
     </File>
     <File>
       <GroupNumber>4</GroupNumber>
-      <FileNumber>9</FileNumber>
+      <FileNumber>7</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -463,13 +374,13 @@
 
   <Group>
     <GroupName>VL53L0x_Core</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>5</GroupNumber>
-      <FileNumber>10</FileNumber>
+      <FileNumber>8</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -481,7 +392,7 @@
     </File>
     <File>
       <GroupNumber>5</GroupNumber>
-      <FileNumber>11</FileNumber>
+      <FileNumber>9</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -493,7 +404,7 @@
     </File>
     <File>
       <GroupNumber>5</GroupNumber>
-      <FileNumber>12</FileNumber>
+      <FileNumber>10</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -505,7 +416,7 @@
     </File>
     <File>
       <GroupNumber>5</GroupNumber>
-      <FileNumber>13</FileNumber>
+      <FileNumber>11</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -517,7 +428,7 @@
     </File>
     <File>
       <GroupNumber>5</GroupNumber>
-      <FileNumber>14</FileNumber>
+      <FileNumber>12</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -531,13 +442,13 @@
 
   <Group>
     <GroupName>VL53L0x_Platform</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>6</GroupNumber>
-      <FileNumber>15</FileNumber>
+      <FileNumber>13</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -549,7 +460,7 @@
     </File>
     <File>
       <GroupNumber>6</GroupNumber>
-      <FileNumber>16</FileNumber>
+      <FileNumber>14</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -564,6 +475,14 @@
   <Group>
     <GroupName>::CMSIS</GroupName>
     <tvExp>0</tvExp>
+    <tvExpOptDlg>0</tvExpOptDlg>
+    <cbSel>0</cbSel>
+    <RteFlg>1</RteFlg>
+  </Group>
+
+  <Group>
+    <GroupName>::Device</GroupName>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>1</RteFlg>
