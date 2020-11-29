@@ -18,12 +18,9 @@ bool 	bitVal = false;
 uint32_t testTimes = 2;
 int fuck = 10;
 
-void delay(us)
+void delay()
 {
-	for(int i = 0; i < us; us--)
-	{
-		__NOP();
-	}
+	__WFI();
 }
 
 uint16_t Distance_data = 0;
@@ -48,12 +45,15 @@ int main(void)
 	VL53L0X_Init(&vl53l0x_dev);
 	GPIO_SET_BIT(GPIOA, 15, 0);
 	Systick_DelayMs(5000); 
+	GPIO_SET_BIT(GPIOB, 1, 0);
 	GPIO_SET_BIT(GPIOA, 15, 1);
 	while(1)
 	{		
 		if((SYS_GetTick() - SysTickCount) == SamplePeriod)
 		{
+			ExistLP_Mode();
 			GPIO_SET_BIT(GPIOA, 15, 1);
+			GPIO_SET_BIT(GPIOB,  1, 1);
 			readVL5Ll0x_PollingtMode(&vl53l0x_dev, &VL53L0x_Data, 0, &Distance_data);
 		}
 		else if((SYS_GetTick() - SysTickCount) > SamplePeriod)
@@ -66,9 +66,17 @@ int main(void)
 			USART2_TX((const char*)&TXBuff, sizeof(TXBuff));
 			bitVal = 1 - bitVal;
 			GPIO_SET_BIT(GPIOA, 15, 1);
+			GPIO_SET_BIT(GPIOB,  1, 1);
+		
+			SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+			
+			
+			PWR->CR = 0XF01;
+			FLASH->ACR |= (0X1 << 3);
+			RCC->CFGR &= ~0X03;
+			//__WFI();
 		}
-		else
-			__WFI;
+		//__WFI();
 	}
 }
 

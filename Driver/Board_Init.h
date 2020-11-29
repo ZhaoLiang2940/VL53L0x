@@ -9,7 +9,7 @@
 #ifndef __BOARD_INIT_H__
 #define	__BOARD_INIT_H__
 #include "stm32l0xx.h"
-
+extern		void 		ExistLP_Mode(void);
 extern		void 		Board_Init(void);
 extern		void 		USART1_TX(const char* buff, uint16_t size);
 extern		void 		USART2_TX(const char* buff, uint16_t size);

@@ -117,6 +117,13 @@ void Board_Init(void)
 	RTC_AWU_Init();
 }
 
+void ExistLP_Mode(void)
+{
+	SystemClock_Init();
+	GPIO_Init();
+	USART2_Init();
+}
+
 
 /********************************************************************************
 *               Board_Init.c
@@ -132,10 +139,13 @@ void Board_Init(void)
 ********************************************************************************/
 void RTC_IRQHandler(void)
 {
+	uint32_t t = 0;
 	if(RTC->ISR & (0X1 << 10)) 
 	{
 		EXTI->PR |= (0X1 << 20);												// 不清楚的话会一直触发中断
 		RTC->ISR  &= ~(0X1 << 10);
+		t = RTC->TR;
+		t = RTC->DR;
 		SYS_IncTick();
 	}
 }
@@ -252,7 +262,7 @@ static void USART2_Init(void)
 	USART2->BRR = Baud;
 	USART2->CR1 |= (0X1 << 0);													/* USRAT1 Enable */
 	NVIC_SetPriority(USART2_IRQn,	USART2_INT_PRIORITY);
-	NVIC_EnableIRQ(USART2_IRQn);
+	//NVIC_EnableIRQ(USART2_IRQn);
 }
 
 
@@ -291,6 +301,7 @@ void Systick_DelayUs(uint16_t us)
 {
 	uint32_t systickVal = 0;
 	uint32_t	tmp = 0;
+	NVIC_DisableIRQ(SysTick_IRQn);
 	systickVal = systick_usFac * us;
 	SysTick->VAL = 0;
 	SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk ;
@@ -372,10 +383,10 @@ static void RTC_AWU_Init(void)
 	while(!(RTC->ISR & 0X04)){};												// Waitting for access to config  Wakeup timer register
 	RTC->CR &= ~(0X7 << 0);														// RTCCLK(LSI 37Khz) / 16 as Auto Wakeup time clock
 	RTC->CR |=  (0X1 << 14);													// Eable Auto  Wakeup Timer interrupt
-	RTC->WUTR = 0X800 - 1;														// 37000/16/2312 = 1S
+	RTC->WUTR = 0X1000 - 1;														// 37000/16/2312 = 1S
 	RTC->CR |=  (0X1 << 10);
 	NVIC_SetPriority(RTC_IRQn,	RTC_INT_PRIORITY);
-	NVIC_EnableIRQ(RTC_IRQn);
+	NVIC_EnableIRQ(RTC_IRQn);	
 }
 
 
@@ -423,7 +434,8 @@ void USART2_TX(const char* buff, uint16_t size)
 		while(!(USART2->ISR & (0X1 << 7))){}
 			USART2->TDR = *buff++;
 	}
-	while(!(USART2->ISR & (0X1 << 7))){};
+	while((!(USART2->ISR & (0X1 << 7))) || (!(USART2->ISR & (0X1 << 6)))){};
+	USART2->ICR |= (0X3 << 6);
 }
 
 /********************************************************************************

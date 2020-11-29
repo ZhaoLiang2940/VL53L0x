@@ -212,6 +212,17 @@ void GPIO_Init(void)
 	GPIOA->MODER |=  (0X1 << 30);
 	GPIOA->ODR |= (0X1 << 15);
 	
+	GPIOB->MODER &= ~(0XF <<  0);
+	GPIOB->MODER |=  (0X5 <<  0);
+	
+	GPIOB->OTYPER  &= ~(0X3 << 0);
+	GPIOB->OSPEEDR &= ~(0X3 << 0);
+	
+	GPIOB->PUPDR &= ~(0XF <<  0);
+	GPIOB->PUPDR |=  (0X9 <<  0);
+	
+	GPIOB->BSRR |=  (0X3 <<  0);
+	
 #if 0	
  	uint32_t regVal = 0;
 	RCC->IOPENR |= 0X03;														/* Enable PORTA, PORTB Clock */
