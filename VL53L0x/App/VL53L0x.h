@@ -35,12 +35,12 @@ typedef  struct
 }mode_data;
 
 
-extern mode_data Mode_data[];
-extern uint8_t  AjustOK;
+extern 		mode_data 		Mode_data[];
+extern 		uint8_t  		AjustOK;
 
-extern	void            VL53L0x_RESET(VL53L0X_Dev_t *dev);//vl53l0x复位
-extern	uint8_t         VL53L0X_Read(uint8_t mode);//获取一次测量距离数据
-extern	VL53L0X_Error 	VL53L0X_Init(VL53L0X_Dev_t *dev);
+extern		void            VL53L0x_RESET(VL53L0X_Dev_t *dev);//vl53l0x复位
+extern		uint8_t         VL53L0X_Read(uint8_t mode);//获取一次测量距离数据
+extern		VL53L0X_Error 	VL53L0X_Init(VL53L0X_Dev_t *dev);
 
 #endif
 

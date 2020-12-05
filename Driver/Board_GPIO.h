@@ -19,19 +19,19 @@
 #define				VL53L0x_SCL_PIN				6
 
 #define				VL53L0x_XSHUT_PORT			GPIOB
-#define				VL53L0x_XSHUT_PIN			5
+#define				VL53L0x_XSHUT_PIN			4
 
-#define				VL53L0x_INT_PORT			GPIOA
-#define				VL53L0x_INT_PIN				15
+#define				VL53L0x_INT_PORT			GPIOB
+#define				VL53L0x_INT_PIN				5
 
 #define				CC2640_WKUP_PORT			GPIOB
 #define				CC2640_WKUP_PIN				0
 
-#define				CC2640_SAMPLE_PORT			GPIOB
-#define				CC2640_SAMPLE_PIN			0
+#define				CC2640_RESET_PORT		    GPIOB
+#define				CC2640_RESET_PIN			0
 
-#define				LED_PORT					GPIOB
-#define				LED_PIN						4
+#define				LED_PORT					GPIOA
+#define				LED_PIN						15
 
 #define				KEY_PORT					GPIOB
 #define				KEY_PIN						3

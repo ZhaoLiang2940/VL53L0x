@@ -1,15 +1,33 @@
-#include "vl53l0x_cali.h"
+/*******************************************************************************
+ * 	VL53L0x_Cali.c
+ *
+ *  Created on: 2020年10月26日
+ *
+ *  Author: ZhaoSir
+ *******************************************************************************/
+#include "VL53L0x_Cali.h"
+#include "Board_Init.h"
+
+#define 			adjust_num 				5									// 校准错误次数
+
+_VL53L0x_Adjust 	Vl53l0x_adjust; 											// 校准数据24c02写缓存区(用于在校准模式校准数据写入24c02)
+_VL53L0x_Adjust 	Vl53l0x_data;   											// 校准数据24c02读缓存区（用于系统初始化时向24C02读取数据）
 
 
 
-_vl53l0x_adjust Vl53l0x_adjust; //鏍″噯鏁版嵁24c02鍐欑紦瀛樺尯(鐢ㄤ簬鍦ㄦ牎鍑嗘ā寮忔牎鍑嗘暟鎹啓鍏�24c02)
-_vl53l0x_adjust Vl53l0x_data;   //鏍″噯鏁版嵁24c02璇荤紦瀛樺尯锛堢敤浜庣郴缁熷垵濮嬪寲鏃跺悜24C02璇诲彇鏁版嵁锛�
-
-#define adjust_num 5//鏍″噯閿欒娆℃暟
-
-//VL53L0X鏍″噯鍑芥暟
-//dev:璁惧I2C鍙傛暟缁撴瀯浣�
-VL53L0X_Error vl53l0x_adjust(VL53L0X_Dev_t *dev)
+/********************************************************************************
+*               VL53L0x_Cali.c
+*函数名称：	VL53L0x_Adjust()
+*
+*函数作用：	校验VL53L0x传感器
+*
+*参数说明：	dev：传感器设备信息
+*
+*函数返回：	无
+*
+*函数作者：	ZhaoSir
+********************************************************************************/
+VL53L0X_Error VL53L0x_Adjust(VL53L0X_Dev_t *dev)
 {
 	
 	VL53L0X_DeviceError Status = VL53L0X_ERROR_NONE;
@@ -23,153 +41,80 @@ VL53L0X_Error vl53l0x_adjust(VL53L0X_Dev_t *dev)
 	uint8_t PhaseCal = 1;
 	uint8_t i=0;
 
-	VL53L0X_StaticInit(dev);//鏁板�兼仮澶嶉粯璁�,浼犳劅鍣ㄥ浜庣┖闂茬姸鎬�
+	VL53L0X_StaticInit(dev);														// 数值恢复默认,传感器处于空闲状态
 
 	spads:
-//	delay_ms(10);
-	//printf("The SPADS Calibration Start...\r\n");
-	Status = VL53L0X_PerformRefSpadManagement(dev,&refSpadCount,&isApertureSpads);//鎵ц鍙傝�僑pad绠＄悊
+	Systick_DelayMs(10);
+	
+	Status = VL53L0X_PerformRefSpadManagement(dev,&refSpadCount,&isApertureSpads);	// 执行参考Spad管理
 	if(Status == VL53L0X_ERROR_NONE)
 	{
-	    //printf("refSpadCount = %d\r\n",refSpadCount);
 	    Vl53l0x_adjust.refSpadCount = refSpadCount;
-	    //printf("isApertureSpads = %d\r\n",isApertureSpads);	
 	    Vl53l0x_adjust.isApertureSpads = isApertureSpads;
-        //printf("The SPADS Calibration Finish...\r\n\r\n");		
-	    i=0;
+        i=0;
 	}
 	else
 	{
 	    i++;
-	    if(i==adjust_num) return Status;
-	    //printf("SPADS Calibration Error,Restart this step\r\n");
+	    if(i == adjust_num) return Status;
 	    goto spads;
 	}
-	//璁惧鍙傝�冩牎鍑�---------------------------------------------------
+	
+	// 设备参考校准---------------------------------------------------
 	ref:
-//	delay_ms(10);
-	//printf("The Ref Calibration Start...\r\n");
-	Status = VL53L0X_PerformRefCalibration(dev,&VhvSettings,&PhaseCal);//Ref鍙傝�冩牎鍑�
+	Systick_DelayMs(10);
+	Status = VL53L0X_PerformRefCalibration(dev,&VhvSettings,&PhaseCal);				//Ref参考校准
 	if(Status == VL53L0X_ERROR_NONE)
 	{
-		//printf("VhvSettings = %d\r\n",VhvSettings);
 		Vl53l0x_adjust.VhvSettings = VhvSettings;
-		//printf("PhaseCal = %d\r\n",PhaseCal);
 		Vl53l0x_adjust.PhaseCal = PhaseCal;
-		//printf("The Ref Calibration Finish...\r\n\r\n");
 		i=0;
 	}
 	else
 	{
 		i++;
-		if(i==adjust_num) return Status;
-		//printf("Ref Calibration Error,Restart this step\r\n");
+		if(i == adjust_num) return Status;
 		goto ref;
 	}
-	//鍋忕Щ鏍″噯------------------------------------------------
-	offset:
-//	delay_ms(10);
-	//printf("Offset Calibration:need a white target,in black space,and the distance keep 100mm!\r\n");
-	//printf("The Offset Calibration Start...\r\n");
 	
+	// 偏移校准------------------------------------------------
+	offset:
+	Systick_DelayMs(10);
 	Status = VL53L0X_PerformOffsetCalibration(dev,CalDistanceMilliMeter,&OffsetMicroMeter);//鍋忕Щ鏍″噯
 	if(Status == VL53L0X_ERROR_NONE)
 	{
-		//printf("CalDistanceMilliMeter = %d mm\r\n",CalDistanceMilliMeter);
 		Vl53l0x_adjust.CalDistanceMilliMeter = CalDistanceMilliMeter;
-		//printf("OffsetMicroMeter = %d mm\r\n",OffsetMicroMeter);	
 		Vl53l0x_adjust.OffsetMicroMeter = OffsetMicroMeter;
-		//printf("The Offset Calibration Finish...\r\n\r\n");
 		i=0;
 	}
 	else
 	{
 		i++;
 		if(i==adjust_num) return Status;
-		//printf("Offset Calibration Error,Restart this step\r\n");
 		goto offset;
 	}
-	//涓叉壈鏍″噯-----------------------------------------------------
+	// 串扰校准-----------------------------------------------------
 	xtalk:
-//	delay_ms(20);
-	//printf("Cross Talk Calibration:need a grey target\r\n");
-	//printf("The Cross Talk Calibration Start...\r\n");	
-	Status = VL53L0X_PerformXTalkCalibration(dev,XTalkCalDistance,&XTalkCompensationRateMegaCps);//涓叉壈鏍″噯
+	Systick_DelayMs(20);
+	Status = VL53L0X_PerformXTalkCalibration(dev,XTalkCalDistance,&XTalkCompensationRateMegaCps);//串扰校准
 	if(Status == VL53L0X_ERROR_NONE)
 	{
-		//printf("XTalkCalDistance = %d mm\r\n",XTalkCalDistance);
 		Vl53l0x_adjust.XTalkCalDistance = XTalkCalDistance;
-		//printf("XTalkCompensationRateMegaCps = %d\r\n",XTalkCompensationRateMegaCps);	
 		Vl53l0x_adjust.XTalkCompensationRateMegaCps = XTalkCompensationRateMegaCps;
-		//printf("The Cross Talk Calibration Finish...\r\n\r\n");
 		i=0;
 	}
 	else
 	{
 		i++;
 		if(i==adjust_num) return Status;
-		//printf("Cross Talk Calibration Error,Restart this step\r\n");
 		goto xtalk;
 	}
-	//printf("All the Calibration has Finished!\r\n");
-	//printf("Calibration is successful!!\r\n");
 
-	Vl53l0x_adjust.adjustok = 0xAA;//鏍″噯鎴愬姛
-//	AT24CXX_Write(0,(uint8_t*)&Vl53l0x_adjust,sizeof(_vl53l0x_adjust));//灏嗘牎鍑嗘暟鎹繚瀛樺埌24c02
-	memcpy(&Vl53l0x_data,&Vl53l0x_adjust,sizeof(_vl53l0x_adjust));//灏嗘牎鍑嗘暟鎹鍒跺埌Vl53l0x_data缁撴瀯浣�
+
+	Vl53l0x_adjust.adjustok = 0xAA;																//校准成功
+//	AT24CXX_Write(0,(uint8_t*)&Vl53l0x_adjust,sizeof(_vl53l0x_adjust));							//将校准数据保存到24c02
+	memcpy(&Vl53l0x_data, &Vl53l0x_adjust, sizeof(_VL53L0x_Adjust));
 	return Status;
 }
 
-//vl53l0x鏍″噯娴嬭瘯
-//dev:璁惧I2C鍙傛暟缁撴瀯浣�
-void vl53l0x_calibration_test(VL53L0X_Dev_t *dev)
-{  
-/*	VL53L0X_Error status = VL53L0X_ERROR_NONE;
-	uint8_t key=0;
-	uint8_t i=0;
-	
-	LCD_Fill(30,170,320,300,WHITE);
-	POINT_COLOR=RED;//璁剧疆瀛椾綋涓虹孩鑹�
-	LCD_ShowString(30,170,300,16,16,"need a white target,and ");
-	LCD_ShowString(30,190,250,16,16,"the distance keep 100mm.");
-	POINT_COLOR=BLUE;//璁剧疆瀛椾綋涓鸿摑鑹�
-	LCD_ShowString(30,220,200,16,16,"KEY_UP: Return menu");
-	LCD_ShowString(30,240,200,16,16,"KEY1:   Calibration");
-	while(1)
-	{
-		key = KEY_Scan(0);
-		if(key==KEY1_PRES)
-		{
-			POINT_COLOR=RED;//璁剧疆瀛椾綋涓虹孩鑹�
-			LCD_ShowString(30,260,200,16,16,"Start calibration...");
-			status = vl53l0x_adjust(dev);//杩涘叆鏍″噯
-			if(status!=VL53L0X_ERROR_NONE)//鏍″噯澶辫触
-			{ 
-				 //printf("Calibration is error!!\r\n");
-				 i=3;
-				 while(i--)
-				 {
-					  delay_ms(500);
-					  LCD_ShowString(30,260,200,16,16,"                    ");
-					  delay_ms(500);
-					  LCD_ShowString(30,260,200,16,16,"Calibration is error");
-				 }
-			}
-			else
-				 LCD_ShowString(30,260,200,16,16,"Calibration is complete!");
-			delay_ms(500);
 
-			break;
-				
-		 }
-		 else if(key==WKUP_PRES)
-		 {
-			 LED1(1);
-			 break;//杩斿洖涓婁竴鑿滃崟
-		 }		 
-		 delay_ms(200);
-		 LED0_Toggle;
-		
-	}
-*/
-}

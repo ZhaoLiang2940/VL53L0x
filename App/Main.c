@@ -5,27 +5,10 @@
  *
  *  Author: ZhaoSir
  *******************************************************************************/
-#include "stm32l0xx.h"
-#include "stdbool.h"
-#include "Board_Init.h" 
-#include "Board_GPIO.h" 
-#include "VL53L0x.h"
+#include "DeviceAction.h"
 
-#define			SamplePeriod   2
 
-uint8_t TXBuff[7] = {0X5A, 0X00, 0X00, 0X00, 0XFE, 0XFE, 0XA5};
-bool 	bitVal = false;
-uint32_t testTimes = 2;
-int fuck = 10;
 
-void delay()
-{
-	__WFI();
-}
-
-uint16_t Distance_data = 0;
-VL53L0X_Dev_t vl53l0x_dev;														// 设备I2C数据参数
-VL53L0X_RangingMeasurementData_t VL53L0x_Data;
 /********************************************************************************
 *               main.c
 *函数名称：	main()
@@ -42,41 +25,11 @@ int main(void)
 {
 	uint32_t SysTickCount = 0UL;
 	Board_Init();
-	VL53L0X_Init(&vl53l0x_dev);
-	GPIO_SET_BIT(GPIOA, 15, 0);
-	Systick_DelayMs(5000); 
-	GPIO_SET_BIT(GPIOB, 1, 0);
-	GPIO_SET_BIT(GPIOA, 15, 1);
+	Device_Init();
+    
 	while(1)
 	{		
-		if((SYS_GetTick() - SysTickCount) == SamplePeriod)
-		{
-			ExistLP_Mode();
-			GPIO_SET_BIT(GPIOA, 15, 1);
-			GPIO_SET_BIT(GPIOB,  1, 1);
-			readVL5Ll0x_PollingtMode(&vl53l0x_dev, &VL53L0x_Data, 0, &Distance_data);
-		}
-		else if((SYS_GetTick() - SysTickCount) > SamplePeriod)
-		{
-			GPIO_SET_BIT(GPIOA, 15, 0);
-			SysTickCount = SYS_GetTick();
-			TXBuff[3] = (Distance_data >> 8) & 0XFF;
-			TXBuff[4] = (Distance_data >> 0) & 0XFF;
-			TXBuff[5] = TXBuff[4] + TXBuff[3];
-			USART2_TX((const char*)&TXBuff, sizeof(TXBuff));
-			bitVal = 1 - bitVal;
-			GPIO_SET_BIT(GPIOA, 15, 1);
-			GPIO_SET_BIT(GPIOB,  1, 1);
-		
-			SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
-			
-			
-			PWR->CR = 0XF01;
-			FLASH->ACR |= (0X1 << 3);
-			RCC->CFGR &= ~0X03;
-			//__WFI();
-		}
-		//__WFI();
+		__WFI(); 
 	}
 }
 

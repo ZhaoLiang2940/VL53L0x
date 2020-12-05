@@ -207,21 +207,10 @@ uint8_t			GPIOB_AF_REG[] = 	{
 ********************************************************************************/
 void GPIO_Init(void)
 {
-	RCC->IOPENR |= 0X03;
-	GPIOA->MODER &= ~(0X3 << 30);
-	GPIOA->MODER |=  (0X1 << 30);
-	GPIOA->ODR |= (0X1 << 15);
-	
-	GPIOB->MODER &= ~(0XF <<  0);
-	GPIOB->MODER |=  (0X5 <<  0);
-	
-	GPIOB->OTYPER  &= ~(0X3 << 0);
-	GPIOB->OSPEEDR &= ~(0X3 << 0);
-	
-	GPIOB->PUPDR &= ~(0XF <<  0);
-	GPIOB->PUPDR |=  (0X9 <<  0);
-	
-	GPIOB->BSRR |=  (0X3 <<  0);
+	RCC->IOPENR  |=   0X3;                                                      // Enable GPIOA¡¢GPIOB port clock
+	GPIOA->MODER &= ~(0X3 << 30);                                               // 
+	GPIOA->MODER |=  (0X1 << 30);                                               // GPIOA_PIN15 OutPut
+	GPIOA->ODR   |=  (0X1 << 15);                                               // Output Hight 
 	
 #if 0	
  	uint32_t regVal = 0;

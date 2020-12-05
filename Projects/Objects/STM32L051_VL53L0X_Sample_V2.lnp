@@ -1,5 +1,6 @@
 --cpu Cortex-M0+
 ".\objects\main.o"
+".\objects\deviceaction.o"
 ".\objects\stm32l0xx_it.o"
 ".\objects\board_gpio.o"
 ".\objects\board_init.o"
