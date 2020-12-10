@@ -1,14 +1,40 @@
 /*******************************************************************************
- * MyCode.c
+ * main.c
  *
- *  Created on: 2020年10月26日
+ *  Created on: 2020?10?26?
  *
  *  Author: ZhaoSir
  *******************************************************************************/
+#include "main.h"
+#include "USART.h"
+#include "VL53L0x.h"
+#include "runStatus.h"
+#include "Board_Init.h" 
+#include "Board_GPIO.h"
 #include "DeviceAction.h"
 
 
+#define             SamplePeriod                    1000
+volatile            uint16_t                        SendToBLETimes = 0;
 
+
+/*
+ * 工作模式规划：
+ * 1. 一上电检测一次报警距离，采样周期，睡眠时间参数是否设置合理，不合理的话就要强制设置为默认值
+ * 2. 读取一次VL53L01传感器检测距离和报警值的距离之间的关系
+ *    2.1：大于报警距离，采样10次每次采集结束后闪烁LED3次，设置睡眠时间
+ *    2.2：小于报警距离，设置系统为睡眠状态，睡眠时间为常规睡眠时间和采样周期
+ * 3. 检测系统状态是否有串口数据要处理
+ * 3. 根据系统状态是否需要发送，进行数据发送
+ * 4. 根据系统状态检测是否需要进行睡眠
+ *
+ *
+ * 睡眠状态下，短按下按键，唤醒设备进行数据采集；采集20次（可以设定）
+ * 
+ * 唤醒状态下，按下按键1~2S不放，关闭蓝牙，但是继续采集数据；
+ * 唤醒状态下，按下按键3~5S不放，设备整体休眠
+ * 唤醒状态下，按下按键超过5S，蓝牙清除绑定信息，进入配对模式
+ */
 /********************************************************************************
 *               main.c
 *函数名称：	main()
@@ -23,31 +49,37 @@
 ********************************************************************************/
 int main(void)
 {
-	uint32_t SysTickCount = 0UL;
-	Board_Init();
-	Device_Init();
+    uint32_t        SampleTime = 0;
+    uint16_t        Distance_data = 0;
     
-	while(1)
-	{		
-		__WFI(); 
-	}
+    initSystemStatus();
+    Board_Init();   
+    SampleTime = HAL_GetTick();
+    
+    while(1)
+    {
+        if(SystemRunSatus != SleepStatus)
+        {
+            if((HAL_GetTick() - SampleTime) > SamplePeriod)
+            {
+                SampleTime = HAL_GetTick() ;
+                SendDistanceToBLE(SendToBLETimes);
+                SendToBLETimes ++;
+            }
+            if(USART2_RX_IsStart() && USART2_RX_IsComplete())
+            {
+                CompleteUSART2_RX();
+            }
+            if(SendToBLETimes >= 5)
+            {
+                SendToBLETimes = 0;
+                readVL53L0X_Data(&Distance_data);
+                Enter_LowPowerMode(10);
+                SampleTime = Exist_LowPowerMode();     
+            }
+        }
+    }
 }
 
-
-
-
-
-/* 
- RTC 设置1S每次；
-	启动测量模式下，
-		有三个档位，第一个档位1S测量一次；第二个档位500MS测量一次；第三个档位100MS测量一次； 长按5S按键进行开机和关机，开机之后，短按1S按键在三种模式下切换；决定采样周期；
-	开机状态下长按按键5S进入关机；
-	关机状态下，长按电源按键5S进入开机；开机和关机快速闪烁5次LED；每次切换采样周期的时候闪烁一次LED；
-
-	蓝牙扫描周期为5S，每次广播数据1S，如果1S内没有连接，关闭蓝牙；5S之后再次广播；
-	蓝牙连接之后就广播距离数据；
-
-	蓝牙的广播与否由STM32决定，STM32通过WKUP引脚决定他的休眠和广播；同时蓝牙的连接状态也会通过引脚反馈给STM32；从而决定他的休眠
-*/
 
 

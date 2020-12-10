@@ -29,10 +29,10 @@
 #ifndef _VL53L0X_API_H_
 #define _VL53L0X_API_H_
 
-#include "vl53l0x_api_strings.h"
-#include "vl53l0x_def.h"
-#include "vl53l0x_platform.h"
-#include "vl53l0x.h"
+#include "VL53L0x_Api_strings.h"
+#include "VL53L0x_Def.h"
+#include "VL53L0x_Platform.h"
+#include "VL53L0x.h"
 
 
 

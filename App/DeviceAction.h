@@ -21,16 +21,21 @@
 
 #define     POWERDOWN_VL53L0x()     GPIO_SET_BIT(CC2640_RESET_PORT, CC2640_RESET_PIN, 0)
 #define     POWERON_VL53L0x()       GPIO_SET_BIT(CC2640_RESET_PORT, CC2640_RESET_PIN, 1)
+
+
+
 typedef struct 
 {
 	_VL53L0x_Adjust 	AdjustData;												// 传感器的家校准信息	
 	uint8_t 			BluetoothStatus;										// 蓝牙的状态信息
 	uint8_t 			AlarmDistance;											// 传感器的报警距离参数
 	uint8_t 			SamplePeriod;											// 传感器的采样周期
+    uint8_t             SystemStatus;
 }DeviceInfomation;
 
 extern			int 		UserCommandHandle(const uint8_t* CMD);
-extern          void        Device_Init(void);
+extern          bool        readVL53L0X_Data(uint16_t*  readdata);
+extern          uint8_t     AlarmDistanceRead(void);
 
 #endif
 

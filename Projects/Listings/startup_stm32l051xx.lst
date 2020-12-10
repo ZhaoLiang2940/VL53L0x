@@ -385,18 +385,17 @@ ARM Macro Assembler    Page 6
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M0+ --apcs=inter
 work --depend=.\objects\startup_stm32l051xx.d -o.\objects\startup_stm32l051xx.o
- -I.\RTE\_VL53L0x_Sample -IC:\Users\ZhaoSir\AppData\Local\Arm\Packs\ARM\CMSIS\5
-.7.0\CMSIS\Core\Include -IC:\Users\ZhaoSir\AppData\Local\Arm\Packs\Keil\STM32L0
-xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include --predefine="__UVISION_V
+ -I.\RTE\_VL53L0x -IC:\Users\18600\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSI
+S\Core\Include -IC:\Users\18600\AppData\Local\Arm\Packs\Keil\STM32L0xx_DFP\2.1.
+0\Drivers\CMSIS\Device\ST\STM32L0xx\Include --predefine="__UVISION_VERSION SETA
 
 
 
 ARM Macro Assembler    Page 7 
 
 
-ERSION SETA 533" --predefine="_RTE_ SETA 1" --predefine="STM32L051xx SETA 1" --
-predefine="_RTE_ SETA 1" --list=.\listings\startup_stm32l051xx.lst RTE\Device\S
-TM32L051K8Ux\startup_stm32l051xx.s
+ 529" --predefine="_RTE_ SETA 1" --predefine="STM32L051xx SETA 1" --list=.\list
+ings\startup_stm32l051xx.lst RTE\Device\STM32L051K8Ux\startup_stm32l051xx.s
 
 
 

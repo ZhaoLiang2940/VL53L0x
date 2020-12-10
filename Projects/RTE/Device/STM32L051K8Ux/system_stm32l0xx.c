@@ -127,8 +127,6 @@
   * @{
   */
 
-  
- 
 /**
   * @brief  Setup the microcontroller system.
   * @param  None
@@ -163,7 +161,6 @@ void SystemInit (void)
 #else
   SCB->VTOR = FLASH_BASE | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal FLASH */
 #endif
-	
 }
 
 /**

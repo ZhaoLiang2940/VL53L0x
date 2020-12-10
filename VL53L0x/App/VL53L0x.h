@@ -1,18 +1,19 @@
 #ifndef __VL53L0X_H
 #define __VL53L0X_H
 
-#include "vl53l0x_api.h"
-#include "vl53l0x_platform.h"
-#include "vl53l0x_gen.h"
-#include "vl53l0x_cali.h"
+#include "VL53L0x_Api.h"
+#include "VL53L0x_Platform.h"
+#include "VL53L0x_Gen.h"
+#include "VL53L0x_Cali.h"
+#include "main.h"
 
 
+#define    DelayMS(x)     HAL_Delay(x)
 //VL53L0X传感器上电默认IIC地址为0X52(不包含最低位)
 #define VL53L0X_Addr 0x52
 
 
 #define		VL53L0X_Xshut(x) 	GPIO_SET_BIT(GPIOB, 4, x)
-#define		DelayMS(x) 			Systick_DelayMs(x)
 
 //使能2.8V IO电平模式
 #define USE_I2C_2V8  1

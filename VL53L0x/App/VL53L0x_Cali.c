@@ -44,7 +44,7 @@ VL53L0X_Error VL53L0x_Adjust(VL53L0X_Dev_t *dev)
 	VL53L0X_StaticInit(dev);														// 数值恢复默认,传感器处于空闲状态
 
 	spads:
-	Systick_DelayMs(10);
+	DelayMS(10);
 	
 	Status = VL53L0X_PerformRefSpadManagement(dev,&refSpadCount,&isApertureSpads);	// 执行参考Spad管理
 	if(Status == VL53L0X_ERROR_NONE)
@@ -62,7 +62,7 @@ VL53L0X_Error VL53L0x_Adjust(VL53L0X_Dev_t *dev)
 	
 	// 设备参考校准---------------------------------------------------
 	ref:
-	Systick_DelayMs(10);
+	DelayMS(10);
 	Status = VL53L0X_PerformRefCalibration(dev,&VhvSettings,&PhaseCal);				//Ref参考校准
 	if(Status == VL53L0X_ERROR_NONE)
 	{
@@ -79,7 +79,7 @@ VL53L0X_Error VL53L0x_Adjust(VL53L0X_Dev_t *dev)
 	
 	// 偏移校准------------------------------------------------
 	offset:
-	Systick_DelayMs(10);
+	DelayMS(10);
 	Status = VL53L0X_PerformOffsetCalibration(dev,CalDistanceMilliMeter,&OffsetMicroMeter);//鍋忕Щ鏍″噯
 	if(Status == VL53L0X_ERROR_NONE)
 	{
@@ -95,7 +95,7 @@ VL53L0X_Error VL53L0x_Adjust(VL53L0X_Dev_t *dev)
 	}
 	// 串扰校准-----------------------------------------------------
 	xtalk:
-	Systick_DelayMs(20);
+	DelayMS(20);
 	Status = VL53L0X_PerformXTalkCalibration(dev,XTalkCalDistance,&XTalkCompensationRateMegaCps);//串扰校准
 	if(Status == VL53L0X_ERROR_NONE)
 	{

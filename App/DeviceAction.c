@@ -7,24 +7,25 @@
  *******************************************************************************/
 #include "DeviceAction.h"
 
+    
+static 		void 		            EnterCalibrationMode(void);
+static 		void 		            WorkModeSetting(uint8_t mode);
+static 		void 		            ShowBluetoothStatus(uint8_t status);
+static 		void 		            AlarmDistanceSetting(uint8_t distance);
+static 		void 		            SamplePeriodSetting(uint8_t period);
+static 		void 		            ErrorCMDHandle(void);
+static      uint8_t                 SamplePeriodRead(void);
+            
+volatile	uint8_t		            BluetoothStatus = 0;									// CC2640的状态
+volatile	uint8_t		            AlarmDistance   = 0;									// 传感器设置的距离报警信息
+volatile	uint8_t		            SamplePeriod    = 0;									// 传感器采样周期
+volatile	uint8_t 	            VL53L0x_WorkMode = 0;
+volatile    DeviceInfomation        SystemConfigFactory;
 
-static 		void 		EnterCalibrationMode(void);
-static 		void 		WorkModeSetting(uint8_t mode);
-static 		void 		ShowBluetoothStatus(uint8_t status);
-static 		void 		AlarmDistanceSetting(uint8_t distance);
-static 		void 		SamplePeriodSetting(uint8_t period);
-static 		void 		ErrorCMDHandle(void);
-static 		void 		VL53L0x_StartSample(void);
 
 
-volatile	uint8_t		BluetoothStatus = 0;									// CC2640的状态
-volatile	uint8_t		AlarmDistance   = 0;									// 传感器设置的距离报警信息
-volatile	uint8_t		SamplePeriod    = 0;									// 传感器采样周期
-volatile	uint8_t 	VL53L0x_WorkMode = 0;
-uint16_t 	            Distance_data = 0;
-
-VL53L0X_Dev_t 	        vl53l0x_dev;										    // 设备I2C数据参数
-VL53L0X_RangingMeasurementData_t VL53L0x_Data;
+VL53L0X_Dev_t 	                    vl53l0x_dev;										    // 设备I2C数据参数
+VL53L0X_RangingMeasurementData_t    VL53L0x_Data;
 
 /********************************************************************************
 *               DeviceAction.c
@@ -38,14 +39,12 @@ VL53L0X_RangingMeasurementData_t VL53L0x_Data;
 *
 *函数作者：	ZhaoSir
 ********************************************************************************/
-void Device_Init(void)
+bool readVL53L0X_Data(uint16_t*  readdata)
 {
     VL53L0X_Init(&vl53l0x_dev);
-	OPEN_LED();
-	Systick_DelayMs(5000); 
 	POWERDOWN_VL53L0x();
-	CLOSE_LED();
-    Enter_LowPowerMode();
+    readVL5Ll0x_PollingtMode(&vl53l0x_dev, &VL53L0x_Data, SamplePeriodRead(), &readData);
+    return *readdata > AlarmDistanceRead();
 }
 /********************************************************************************
 *               DeviceAction.c
@@ -94,7 +93,7 @@ int UserCommandHandle(const uint8_t* CMD)
 				SamplePeriodSetting(parameter);
 				break;
             case 0X06:
-				VL53L0x_StartSample();
+				readVL53L0X_Data();
 				break;
 			default:
 				ErrorCMDHandle();
@@ -126,9 +125,9 @@ static void EnterCalibrationMode(void)
         for(k = 0; k < 5; k ++)												// 等间隔慢速闪烁5次标识校准失败
         {
             OPEN_LED();
-            Systick_DelayMs(400);
+            DelayMS(400);
             CLOSE_LED();
-            Systick_DelayMs(400);		
+            DelayMS(400);		
         }
     }
     else
@@ -136,9 +135,9 @@ static void EnterCalibrationMode(void)
         for(k = 0; k < 5; k ++)												// 等间隔慢速闪烁5次标识校准失败
         {
             OPEN_LED();
-            Systick_DelayMs(100);
+            DelayMS(100);
             CLOSE_LED();
-            Systick_DelayMs(400);		
+            DelayMS(400);		
         }
     }
 }
@@ -206,7 +205,7 @@ static void AlarmDistanceSetting(uint8_t distance)
 *
 *函数作者：	ZhaoSir
 ********************************************************************************/
-static uint8_t AlarmDistanceRead(void)
+uint8_t AlarmDistanceRead(void)
 {
 	return AlarmDistance;
 }
@@ -262,50 +261,7 @@ static void ErrorCMDHandle(void)
 	
 }
 
-/********************************************************************************
-*               DeviceAction.c
-*函数名称：	VL53L0x_StartSample()
-*
-*函数作用：	启动一次测量
-*
-*参数说明：	无
-*
-*函数返回：	无
-*
-*函数作者：	ZhaoSir
-********************************************************************************/
-void VL53L0x_StartSample(void)
-{
-    uint32_t        SysTickCount = 0UL;
-    uint8_t         WorkStatus   = 0U;
-    uint8_t 		TXBuff[7] = {0X5A, 0X00, 0X00, 0X00, 0XFE, 0XFE, 0XA5};
-    while(1)
-    {
-        /* 判断睡眠唤醒时间是否到达，是进行一次采样，并且发送数据 */
-        if(((SYS_GetTick() - SysTickCount) >= SamplePeriodRead()) && (WorkStatus == 0))
-        {
-            Quit_LowPowerMode();
-            OPEN_LED();
-            readVL5Ll0x_PollingtMode(&vl53l0x_dev, &VL53L0x_Data, SamplePeriodRead(), &Distance_data);
-            WorkStatus = 1;
-        }
-        /* 睡眠唤醒时间到达，并且已经完成一次采样了，进行数据发送 */
-        else if(((SYS_GetTick() - SysTickCount) >= SamplePeriodRead()) && (WorkStatus == 1))
-        {
-            TXBuff[3] = (Distance_data >> 8) & 0XFF;
-            TXBuff[4] = (Distance_data >> 0) & 0XFF;
-            TXBuff[5] = TXBuff[4] + TXBuff[3];
-            USART2_TX((const char*)&TXBuff, sizeof(TXBuff));
-            CLOSE_LED();
-            WorkStatus = 0;
-           
-        }
-        /* 常规唤醒，没有到达采样时间，直接休眠 */
-        else
-             Enter_LowPowerMode();
-            
-    }
-}
+
 /*
  * CMD[0]:	命令起始符
  *			'C'
